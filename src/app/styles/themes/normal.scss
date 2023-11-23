@@ -1,0 +1,21 @@
+.app.light {
+
+    --white: #FFFFFF;
+    --green: #899441;
+    --orange: #DC3E22;
+    --black: #333333;
+
+    --bg-color: var(--white);
+    --font-color: var(--black);
+    --orange-light: var(#EE735D);
+    --orange-lightness: var(#EA8979);
+    --green-light: #A8B64F;
+
+
+
+    --action-btn-1: var(--green-light);
+    --action-btn-1--hover: var(--green);
+
+    --action-btn-2: var(--white);
+    --action-btn-2--hover: var(--orange);
+}
