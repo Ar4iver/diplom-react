@@ -1,5 +1,3 @@
-import { MainPage } from 'pages/MainPage'
-import { StatistiсPage } from 'pages/StatisticPage'
 import React, { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { routeConfig } from 'shared/config/routeConfig/routeConfig'
