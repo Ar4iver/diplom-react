@@ -1,4 +1,9 @@
 module.exports = {
+	settings: {
+		react: {
+			version: 'detect',
+		},
+	},
 	env: {
 		browser: true,
 		es2021: true,
@@ -29,8 +34,10 @@ module.exports = {
 		ecmaVersion: 'latest',
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint', 'react'],
+	plugins: ['@typescript-eslint', 'react', 'react-hooks'],
 	rules: {
 		'no-unused-vars': 'off',
+		'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+		'react-hooks/exhaustive-deps': 'error', // Checks effect dependencies
 	},
 }
