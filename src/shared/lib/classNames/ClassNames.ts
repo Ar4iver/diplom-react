@@ -15,7 +15,7 @@
  * а в качестве значения boolean или string
  */
 
-type Mods = Record<string, boolean | string>
+export type Mods = Record<string, boolean | string | undefined>
 
 export function classNames(
 	cls: string,

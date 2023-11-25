@@ -6,7 +6,13 @@ import App from './app/App'
 import { ThemeProvider } from './app/providers/ThemeProvider'
 import { ErrorBoundary } from 'app/providers/ErrorBoundary'
 
-const root = createRoot(document.getElementById('root'))
+const container = document.getElementById('root')
+
+if (!container) {
+	throw new Error('Container root is not defined')
+}
+
+const root = createRoot(container)
 
 root.render(
 	<BrowserRouter>
