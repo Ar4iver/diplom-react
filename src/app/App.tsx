@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useTheme } from 'shared/lib/theme/useTheme'
 import { classNames } from 'shared/lib/classNames/classNames'
 import { AppRouter } from './providers/router'
-import { NavBar } from 'widgets/NavBar'
 import { ThemeSwitcher } from 'widgets/ThemeSwitcher'
 import { Modal } from 'shared/ui/Modal/Modal'
+import { Navbar } from 'widgets/NavBar'
 
 const App = () => {
 	const { theme } = useTheme()
@@ -13,7 +13,7 @@ const App = () => {
 
 	return (
 		<div className={classNames('app', {}, [theme])}>
-			<NavBar />
+			<Navbar />
 			<button onClick={() => setIsOpen(true)}>toogle modal</button>
 			<Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
 				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut

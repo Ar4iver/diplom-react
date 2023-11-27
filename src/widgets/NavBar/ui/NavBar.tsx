@@ -12,7 +12,7 @@ interface NavbarProps {
 	className?: string
 }
 
-export const NavBar = ({ className }: NavbarProps) => {
+export const Navbar = ({ className }: NavbarProps) => {
 	return (
 		<div className={classNames(cls.Navbar, {}, [className])}>
 			<AppLink theme={AppLinkTheme.SECONDARY} to={'/'}>

@@ -13,6 +13,7 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react/recommended',
+		'plugin:storybook/recommended',
 	],
 	overrides: [
 		{
@@ -39,5 +40,6 @@ module.exports = {
 		'no-unused-vars': 'off',
 		'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
 		'react-hooks/exhaustive-deps': 'error', // Checks effect dependencies
+		'@typescript-eslint/ban-ts-comment': 'error',
 	},
 }
