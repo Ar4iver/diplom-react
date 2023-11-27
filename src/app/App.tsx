@@ -4,7 +4,7 @@ import { classNames } from 'shared/lib/classNames/classNames'
 import { AppRouter } from './providers/router'
 import { ThemeSwitcher } from 'widgets/ThemeSwitcher'
 import { Modal } from 'shared/ui/Modal/Modal'
-import { Navbar } from 'widgets/NavBar'
+import { Navbar } from 'widgets/Navbar'
 
 const App = () => {
 	const { theme } = useTheme()
