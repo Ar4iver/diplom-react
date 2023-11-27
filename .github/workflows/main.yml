@@ -5,11 +5,11 @@ on:
  pull_request:
    branches: [ master ]
 jobs:
- pipeline:
-   runs-on: ubuntu-latest
-   strategy:
-     matrix:
-       node-version: [ 17.x ]
+  pipeline:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 17.x ]
 
     steps: 
       - uses: actions/checkout@v2
