@@ -6,8 +6,9 @@ import { BuildOptions } from './types/config'
 
 export function buildPlugins({
 	paths,
+	isDev,
 }: BuildOptions): webpack.WebpackPluginInstance[] {
-	return [
+	const plugins = [
 		new HtmlWebpackPlugin({
 			template: paths.html,
 		}),
@@ -16,8 +17,15 @@ export function buildPlugins({
 			filename: 'css/[name].[contenthash:8].css',
 			chunkFilename: 'css/[name].[contenthash:8].css',
 		}),
-		new BundleAnalyzerPlugin({
-			openAnalyzer: false,
-		}),
 	]
+
+	if (isDev) {
+		plugins.push(
+			new BundleAnalyzerPlugin({
+				openAnalyzer: false,
+			})
+		)
+	}
+
+	return plugins
 }
