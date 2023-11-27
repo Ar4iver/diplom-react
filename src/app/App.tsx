@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useTheme } from 'shared/lib/theme/useTheme'
-import { classNames } from 'shared/lib/classNames/classNames'
 import { AppRouter } from './providers/router'
 import { ThemeSwitcher } from 'widgets/ThemeSwitcher'
 import { Modal } from 'shared/ui/Modal/Modal'
 import { Navbar } from 'widgets/Navbar'
+import { classNames } from 'shared/lib/classNames/classNames'
 
 const App = () => {
 	const { theme } = useTheme()
