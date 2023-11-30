@@ -1,8 +1,5 @@
-// export interface TodoState {
-// 	id: string
-// 	text: string
-// }
+import { AddTodoPomodoroSchema } from 'features/addTodoPomodoro'
 
 export interface StateSchema {
-	// todo: TodoState
+	addTodoPomodoroForm: AddTodoPomodoroSchema
 }

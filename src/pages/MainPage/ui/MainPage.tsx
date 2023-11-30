@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './MainPage.module.scss'
+import { TodoForm } from 'features/addTodoPomodoro'
 
 const MainPage = () => {
 	return (
-		<section className='section__app'>
+		<section className="section__app">
 			<div className={styles.task__descr}>
 				<h2>Ура! Теперь можно начать работать:</h2>
 				<ul>
@@ -18,7 +19,9 @@ const MainPage = () => {
 					</li>
 				</ul>
 			</div>
-			<div></div>
+			<div>
+				<TodoForm />
+			</div>
 		</section>
 	)
 }

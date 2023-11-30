@@ -41,5 +41,6 @@ module.exports = {
 		'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
 		'react-hooks/exhaustive-deps': 'error', // Checks effect dependencies
 		'@typescript-eslint/ban-ts-comment': 'error',
+		'no-param-reassign': 'off',
 	},
 }

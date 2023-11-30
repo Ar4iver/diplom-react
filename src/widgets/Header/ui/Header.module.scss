@@ -9,8 +9,6 @@
     justify-content: space-between;
     width: 100%;
 
-
-
     .links {
         display: flex;
         align-items: center;
@@ -22,11 +20,29 @@
             gap: 5px;
             text-decoration: none;
 
-
             span {
                 display: flex;
                 align-items: center;
-                color: var(--orange);
+                color: var(--secondary-color);
+                transition: color 0.3s ease-in-out;
+
+                svg {
+                    fill: var(--secondary-color);
+                    transition: fill 0.3s ease-in-out;
+                }
+
+            }
+
+            &:hover {
+                span {
+                    display: flex;
+                    align-items: center;
+                    color: var(--secondary-color-hover);
+
+                    svg {
+                        fill: var(--secondary-color-hover);
+                    }
+                }
             }
         }
     }

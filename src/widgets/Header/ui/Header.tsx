@@ -12,6 +12,11 @@ interface HeaderProps {
 	className?: string
 }
 
+export enum ThemeHeaderLink {
+	LIGHT = 'light',
+	DARK = 'dark',
+}
+
 export const Header = ({ className }: HeaderProps) => {
 	return (
 		<header className={classNames(cls.Header, {}, [className])}>
