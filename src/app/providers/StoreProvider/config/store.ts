@@ -1,6 +1,6 @@
 import { ReducersMapObject, configureStore } from '@reduxjs/toolkit'
 import { StateSchema } from './StateSchema'
-import { addTodoPomodoroReducer } from 'features/addTodoPomodoro'
+import { addTodoFormReducer } from 'features/addTodoPomodoro'
 
 /***
  * ReducersMapObject - позволяет структурировать и обьединять множество редьюсеров
@@ -11,7 +11,7 @@ import { addTodoPomodoroReducer } from 'features/addTodoPomodoro'
 
 export function createReduxStore(initialState?: StateSchema) {
 	const rootReducers: ReducersMapObject<StateSchema> = {
-		addTodoPomodoroForm: addTodoPomodoroReducer,
+		addTodoForm: addTodoFormReducer,
 	}
 
 	return configureStore<StateSchema>({

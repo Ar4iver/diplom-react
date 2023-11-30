@@ -1,6 +1,6 @@
-export type { AddTodoPomodoroSchema } from './model/types/todo'
+export type { AddTodoPomodoroSchema } from './model/types/AddTodoPomodoro'
 export {
-	addTodoPomodoroActions,
-	addTodoPomodoroReducer,
+	addTodoFormActions,
+	addTodoFormReducer,
 } from './model/slice/addTodoPomodoroFormSlice'
 export { TodoForm } from './ui/TodoForm/TodoForm'
