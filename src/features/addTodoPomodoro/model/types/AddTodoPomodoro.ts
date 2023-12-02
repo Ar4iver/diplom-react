@@ -1,5 +1,7 @@
+import { Todo } from "entities/Todo"
+
 export interface AddTodoPomodoroSchema {
-	text?: string
-	todos?: string[]
+	todo: string
 	error?: string
+	todos: Todo[]
 }

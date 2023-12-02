@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { AddTodoPomodoroSchema } from '../types/AddTodoPomodoro'
+import { Todo } from 'entities/Todo'
 
 /**
  * С помощью PayloadAction мы можем определить что мы ожидаем внутри action (какие данные)
@@ -8,32 +9,29 @@ import { AddTodoPomodoroSchema } from '../types/AddTodoPomodoro'
  */
 
 const initialState: AddTodoPomodoroSchema = {
-	text: '',
-	todos: [],
+	todo: '',
 	error: '',
+	todos: [],
 }
 
 export const addTodoFormSlice = createSlice({
 	name: 'addTodoForm',
 	initialState,
 	reducers: {
-		setTodo: (state, action: PayloadAction<string>) => {
-			state.text = action.payload
+		setTodoTextInput: (state, action: PayloadAction<string>) => {
+			state.todo = action.payload
 		},
-		addTodo: (state) => {
-			if (
-				state?.text !== '' &&
-				state?.text !== null &&
-				state?.text !== undefined
-			) {
-				state?.todos?.push(state?.text ?? '')
-				state.text = ''
+		addTodoTextInput: (state, action: PayloadAction<string>) => {
+			if (state.todo.length) {
+				const newTodo: Todo = {
+					todoText: action.payload,
+				}
+				state.todos.push(newTodo)
 			}
-			state.error = 'Неверно набрано поле'
+			state.error = 'Введите название задачи'
 		},
 	},
 })
 
-export const { addTodo } = addTodoFormSlice.actions
 export const { actions: addTodoFormActions } = addTodoFormSlice
 export const { reducer: addTodoFormReducer } = addTodoFormSlice

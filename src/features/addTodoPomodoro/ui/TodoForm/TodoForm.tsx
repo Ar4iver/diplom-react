@@ -4,9 +4,8 @@ import cls from './TodoForm.module.scss'
 import { Button, ThemeButton } from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
 import { useDispatch, useSelector } from 'react-redux'
-import { getTodoState } from '../../model/selectors/selectTodoState/getTodoState'
+import { getAddTodoFormText } from '../../model/selectors/selectTodoState/addTodoFormSelectors'
 import { addTodoFormActions } from '../../model/slice/addTodoPomodoroFormSlice'
-import { addTodo } from '../../model/slice/addTodoPomodoroFormSlice'
 
 interface TodoFormProps {
 	className?: string
@@ -15,7 +14,8 @@ interface TodoFormProps {
 /**
  * Во избежание лишних перерисовок, форму оборачиваем в memo.
  *
- * Все функции, которые передаём пропсом, оборачиваем в useCallback, чтобы ссылка на этот обьект не изменялась.
+ * Все функции, которые передаём пропсом, оборачиваем в useCallback, чтобы ссылка на этот обьект не изменялась,
+ * и после каждого рендера она не вызывалась.
  *
  */
 
@@ -23,24 +23,24 @@ interface TodoFormProps {
 export const TodoForm = memo(({ className }: TodoFormProps) => {
 	const dispatch = useDispatch()
 
-	const addTodoForm = useSelector(getTodoState)
+	const text = useSelector(getAddTodoFormText)
 
 	const onChangeTodo = useCallback(
 		(value: string) => {
-			dispatch(addTodoFormActions.setTodo(value))
+			dispatch(addTodoFormActions.setTodoTextInput(value))
 		},
 		[dispatch]
 	)
 
-	const addTodoHandler = useCallback(() => {
-		dispatch(addTodo())
-	}, [dispatch])
+	const onAddTodo = useCallback(() => {
+		dispatch(addTodoFormActions.addTodoTextInput(text))
+	}, [dispatch, text])
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault()
-				addTodoHandler()
+				onAddTodo()
 			}}
 			className={classNames(cls.TodoForm, {}, [className])}
 		>
@@ -48,7 +48,7 @@ export const TodoForm = memo(({ className }: TodoFormProps) => {
 				onChange={onChangeTodo}
 				type="text"
 				placeholder="Название задачи"
-				value={addTodoForm.text}
+				value={text}
 			/>
 			<Button theme={ThemeButton.PRIMARY}>Добавить</Button>
 		</form>

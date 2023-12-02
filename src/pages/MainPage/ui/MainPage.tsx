@@ -1,8 +1,13 @@
 import React from 'react'
 import styles from './MainPage.module.scss'
 import { TodoForm } from 'features/addTodoPomodoro'
+import { TodoList } from 'entities/Todo'
+import { useSelector } from 'react-redux'
+import { getTodos } from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
 
 const MainPage = () => {
+	const todos = useSelector(getTodos)
+
 	return (
 		<section className="section__app">
 			<div className={styles.task__descr}>
@@ -21,6 +26,7 @@ const MainPage = () => {
 			</div>
 			<div>
 				<TodoForm />
+				<TodoList todos={todos} />
 			</div>
 		</section>
 	)
