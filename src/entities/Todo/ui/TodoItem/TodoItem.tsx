@@ -20,9 +20,11 @@ export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
 
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
-			<div>{todoId}</div>
-			<div>{todo?.todoText}</div>
-			<div>
+			<div className={cls.contentTodo}>
+				<div>{todoId}</div>
+				<div>{todo?.todoText}</div>
+			</div>
+			<div className={cls.actionBtn}>
 				<Dropdown
 					items={[
 						{

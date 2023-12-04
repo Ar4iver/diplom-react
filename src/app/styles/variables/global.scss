@@ -1,8 +1,15 @@
 :root {
     --font-family-main: 'Nunito Sans', sans-serif;
+    --font-family-secondary: 'SF UI Display', sans-serif;
 
+
+
+    --big-font-size: 150px;
+    --big-font-line: 160px;
 
     --container: 1440px;
+
+    --font-big: var(--big-font-size) / var(--big-font-line) var(--font-family-secondary);
 
     --font-size-m: 16px;
     --font-line-m: 24px;
