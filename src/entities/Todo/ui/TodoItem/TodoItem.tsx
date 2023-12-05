@@ -21,7 +21,7 @@ export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
 			<div className={cls.contentTodo}>
-				<div>{todoId}</div>
+				<div className={cls.circle}>{todoId}</div>
 				<div>{todo?.todoText}</div>
 			</div>
 			<div className={cls.actionBtn}>

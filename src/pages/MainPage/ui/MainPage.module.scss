@@ -4,14 +4,27 @@
 
     .leftContent {
         grid-column: 1;
+
+        .task__descr {
+            margin-bottom: 25px;
+
+            h2 {
+                margin-bottom: 5px;
+            }
+        }
     }
 
     .rightContent {
         grid-column: 2;
+        max-height: 500px;
         display: flex;
         flex-direction: column;
         background-color: var(--secondary2-color);
     }
+}
+
+.todoList {
+    margin-bottom: 25px;
 }
 
 .todosContainer {
@@ -52,6 +65,7 @@
 .taskTimer {
     display: flex;
     justify-content: center;
+    margin-bottom: 32px;
 }
 
 .btnTimerAction {
@@ -59,4 +73,8 @@
     gap: 25px;
     justify-content: center;
     margin-bottom: 107px;
+}
+
+.initial {
+    color: white;
 }

@@ -12,13 +12,9 @@ interface TodoListProps {
 export const TodoList = ({ className, todos }: TodoListProps) => {
 	return (
 		<div className={classNames(cls.TodoList, {}, [className])}>
-			{todos?.length ? (
-				todos.map((todo: Todo, id) => (
-					<TodoItem todo={todo} id={id} key={id} />
-				))
-			) : (
-				<p>Задачи отсутствуют</p>
-			)}
+			{todos.map((todo: Todo, id) => (
+				<TodoItem todo={todo} id={id} key={id} />
+			))}
 		</div>
 	)
 }

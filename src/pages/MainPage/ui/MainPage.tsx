@@ -5,7 +5,7 @@ import { TodoForm } from 'features/addTodoPomodoro'
 import { TodoList } from 'entities/Todo'
 import { useSelector } from 'react-redux'
 import { getTodos } from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
-import { Button } from 'shared/ui/Button/Button'
+import { Button, ThemeButton } from 'shared/ui/Button/Button'
 
 const MainPage = () => {
 	const todos = useSelector(getTodos)
@@ -29,7 +29,9 @@ const MainPage = () => {
 					</ul>
 				</div>
 				<div className={cls.todosContainer}>
-					<TodoForm />
+					<div className={cls.todoList}>
+						<TodoForm />
+					</div>
 					<TodoList todos={todos} />
 				</div>
 			</div>
@@ -48,8 +50,8 @@ const MainPage = () => {
 				</div>
 				<div className={cls.taskTimer}>Задача 1 - Сверстать сайт</div>
 				<div className={cls.btnTimerAction}>
-					<Button>Старт</Button>
-					<Button>Стоп</Button>
+					<Button theme={ThemeButton.PRIMARY}>Старт</Button>
+					<Button theme={ThemeButton.OUTLINE}>Стоп</Button>
 				</div>
 			</div>
 		</section>

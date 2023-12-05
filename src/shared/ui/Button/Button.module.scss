@@ -7,7 +7,6 @@
     padding: 15px 50px;
     color: var(--text-color-primary);
     border: none;
-    border-radius: 5px;
 }
 
 .clear {
@@ -19,9 +18,8 @@
 }
 
 .outline {
-    padding: 10px 15px;
-    border: 1px solid var(--orange);
-    color: var(--orange);
+    padding: 15px 50px;
+    border: 1px solid var(--bg-color2);
+    color: var(--bg-color2);
     background: none;
-    border-radius: 5px;
 }

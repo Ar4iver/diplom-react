@@ -8,10 +8,19 @@ import { Todo } from 'entities/Todo'
  *
  */
 
+const loadTodos = () => {
+	const savedTodos = localStorage.getItem('todos')
+	return savedTodos ? JSON.parse(savedTodos) : []
+}
+
+const saveTodos = (todos: Todo[]) => {
+	localStorage.setItem('todos', JSON.stringify(todos))
+}
+
 const initialState: AddTodoPomodoroSchema = {
 	todo: '',
 	error: '',
-	todos: [],
+	todos: loadTodos(),
 }
 
 export const addTodoFormSlice = createSlice({
@@ -28,6 +37,7 @@ export const addTodoFormSlice = createSlice({
 				}
 				state.todos.push(newTodo)
 			}
+			saveTodos(state.todos)
 			state.error = 'Введите название задачи'
 		},
 	},

@@ -16,11 +16,16 @@ type HTMLInputProps = Omit<
 	'value' | 'onChange'
 >
 
+export enum ThemeInput {
+	PRIMARY = 'primary',
+}
+
 interface InputProps extends HTMLInputProps {
 	className?: string
 	value?: string
 	type?: string
 	placeholder?: string
+	theme?: ThemeInput
 	onChange?: (value: string) => void
 }
 
@@ -32,6 +37,7 @@ export const Input = memo((props: InputProps) => {
 		type = 'text',
 		placeholder,
 		onChange,
+		theme = ThemeInput.PRIMARY,
 		...otherProps
 	} = props
 
@@ -40,14 +46,13 @@ export const Input = memo((props: InputProps) => {
 	}
 
 	return (
-		<div className={classNames(cls.Input, {}, [className])}>
-			<input
-				type={type}
-				value={value}
-				onChange={onChangeHandler}
-				placeholder={placeholder}
-				{...otherProps}
-			/>
-		</div>
+		<input
+			className={classNames(cls.Input, {}, [className, cls[theme]])}
+			type={type}
+			value={value}
+			onChange={onChangeHandler}
+			placeholder={placeholder}
+			{...otherProps}
+		/>
 	)
 })
