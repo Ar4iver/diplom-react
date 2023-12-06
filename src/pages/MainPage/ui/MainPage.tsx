@@ -10,6 +10,14 @@ import { Button, ThemeButton } from 'shared/ui/Button/Button'
 const MainPage = () => {
 	const todos = useSelector(getTodos)
 
+	const totalMinutes = todos.reduce(
+		(acc, todo) => acc + todo.timeToComplete,
+		0
+	)
+
+	const hours = Math.floor(totalMinutes / 60)
+	const minutes = totalMinutes % 60
+
 	return (
 		<section className={cls.section__app}>
 			<div className={cls.leftContent}>
@@ -29,10 +37,17 @@ const MainPage = () => {
 					</ul>
 				</div>
 				<div className={cls.todosContainer}>
-					<div className={cls.todoList}>
+					<div className={cls.todoForm}>
 						<TodoForm />
 					</div>
-					<TodoList todos={todos} />
+					<div className={cls.todoList}>
+						<TodoList todos={todos} />
+					</div>
+					<span>
+						{hours > 0
+							? `${hours} часов ${minutes} минут`
+							: `${minutes} минут`}
+					</span>
 				</div>
 			</div>
 			<div className={cls.rightContent}>

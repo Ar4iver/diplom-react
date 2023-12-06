@@ -23,12 +23,20 @@
     }
 }
 
-.todoList {
+.todoForm {
     margin-bottom: 25px;
+}
+
+.todoList {
+    margin-bottom: 20px;
 }
 
 .todosContainer {
     max-width: 370px;
+
+    span {
+        color: var(--text-color-input);
+    }
 }
 
 .timerHeader {

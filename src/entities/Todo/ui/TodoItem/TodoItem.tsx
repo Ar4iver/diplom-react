@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoItem.module.scss'
 import IncrButtontime from 'shared/assets/icons/add_time_icon.svg'
@@ -8,6 +8,8 @@ import DeleteButtonTodo from 'shared/assets/icons/delete_icon.svg'
 import ButtonActionDropdown from 'shared/assets/icons/btn-action-dpd-todo.svg'
 import { Todo } from 'entities/Todo/model/types/todo'
 import { Dropdown } from 'shared/ui/Dropdowm/Dropdown'
+import { useDispatch } from 'react-redux'
+import { addTodoFormActions } from 'features/addTodoPomodoro'
 
 interface TodoItemProps {
 	className?: string
@@ -17,6 +19,19 @@ interface TodoItemProps {
 
 export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
 	const todoId = id + 1
+
+	const dispatch = useDispatch()
+
+	const handleRemoveTodo = useCallback(
+		(id: number) => {
+			dispatch(addTodoFormActions.removeTodo(id))
+		},
+		[dispatch]
+	)
+
+	// const handleRemoveTodo = (id: number) => {
+	// 	dispatch(addTodoFormActions.removeTodo(id))
+	// }
 
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
@@ -66,6 +81,7 @@ export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
 									<span>Удалить</span>
 								</div>
 							),
+							onClick: () => handleRemoveTodo(id),
 						},
 					]}
 					trigger={<ButtonActionDropdown />}
