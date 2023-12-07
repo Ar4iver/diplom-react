@@ -5,4 +5,5 @@ export interface AddTodoPomodoroSchema {
 	error?: string
 	todos: Todo[]
 	timeToComplete: number
+	complete: boolean
 }

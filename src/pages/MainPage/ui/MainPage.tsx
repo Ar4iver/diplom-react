@@ -4,19 +4,21 @@ import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.sv
 import { TodoForm } from 'features/addTodoPomodoro'
 import { TodoList } from 'entities/Todo'
 import { useSelector } from 'react-redux'
-import { getTodos } from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
+import {
+	getStateFirstTimeCompleteTodo,
+	getTodos,
+} from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
 import { Button, ThemeButton } from 'shared/ui/Button/Button'
+import { formatTime } from 'shared/lib/helpers/formatTime'
 
 const MainPage = () => {
 	const todos = useSelector(getTodos)
+	const timeTodo = useSelector(getStateFirstTimeCompleteTodo)
 
-	const totalMinutes = todos.reduce(
+	const totalSeconds = todos.reduce(
 		(acc, todo) => acc + todo.timeToComplete,
 		0
 	)
-
-	const hours = Math.floor(totalMinutes / 60)
-	const minutes = totalMinutes % 60
 
 	return (
 		<section className={cls.section__app}>
@@ -44,9 +46,7 @@ const MainPage = () => {
 						<TodoList todos={todos} />
 					</div>
 					<span>
-						{hours > 0
-							? `${hours} часов ${minutes} минут`
-							: `${minutes} минут`}
+						{timeTodo ? formatTime(totalSeconds, 'sumTime') : ''}
 					</span>
 				</div>
 			</div>
@@ -57,7 +57,9 @@ const MainPage = () => {
 				</div>
 				<div className={cls.timerBlock}>
 					<span className={cls.timerContent}>
-						<span className={cls.timer}>25:00</span>
+						<span className={cls.timer}>
+							{formatTime(totalSeconds, 'timer')}
+						</span>
 						<span className={cls.iconBtnActionAddTime}>
 							<AddTimeBigAction />
 						</span>

@@ -9,3 +9,6 @@ export const getTodos = (state: StateSchema) => state?.addTodoForm?.todos
 
 export const getAddTodoFormError = (state: StateSchema) =>
 	state?.addTodoForm?.error
+
+export const getStateFirstTimeCompleteTodo = (state: StateSchema) =>
+	state?.addTodoForm?.todos[0]?.timeToComplete

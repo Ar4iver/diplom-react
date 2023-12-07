@@ -20,7 +20,8 @@ const saveTodos = (todos: Todo[]) => {
 const initialState: AddTodoPomodoroSchema = {
 	todo: '',
 	error: '',
-	timeToComplete: 25,
+	timeToComplete: 1500, //25 минут в секундах
+	complete: false,
 	todos: loadTodos(),
 }
 
@@ -35,7 +36,8 @@ export const addTodoFormSlice = createSlice({
 			if (state.todo.length) {
 				const newTodo: Todo = {
 					todoText: action.payload,
-					timeToComplete: 25,
+					timeToComplete: 1500,
+					complete: false,
 				}
 				state.todos.push(newTodo)
 			}
@@ -43,10 +45,10 @@ export const addTodoFormSlice = createSlice({
 			state.error = 'Поле ввода пустое'
 		},
 		addTimeToComplete: (state) => {
-			state.timeToComplete += 25
+			state.timeToComplete += 300 //5 минут в секундах
 		},
 		subtractTimeToComplete: (state) => {
-			state.timeToComplete -= 25
+			state.timeToComplete -= 300
 		},
 		removeTodo: (state, action: PayloadAction<number>) => {
 			state.todos.splice(action.payload, 1)
