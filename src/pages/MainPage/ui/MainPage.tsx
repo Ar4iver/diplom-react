@@ -1,24 +1,40 @@
 import React from 'react'
 import cls from './MainPage.module.scss'
 import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.svg'
-import { TodoForm } from 'features/addTodoPomodoro'
+import { TodoForm, addTodoFormActions } from 'features/addTodoPomodoro'
 import { TodoList } from 'entities/Todo'
 import { useSelector } from 'react-redux'
-import {
-	getStateFirstTimeCompleteTodo,
-	getTodos,
-} from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
-import { Button, ThemeButton } from 'shared/ui/Button/Button'
+import { getTodos } from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
+import { Button } from 'shared/ui/Button/Button'
 import { formatTime } from 'shared/lib/helpers/formatTime'
+import { classNames } from 'shared/lib/classNames/classNames'
+import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 
 const MainPage = () => {
+	const dispatch = useAppDispatch()
 	const todos = useSelector(getTodos)
-	const timeTodo = useSelector(getStateFirstTimeCompleteTodo)
+	const activeTodo = todos.length > 0 ? todos[0] : null
+
+	const timeTodo = useSelector(
+		(state: StateSchema) => state?.addTodoForm?.todos[0]?.timeToComplete
+	)
+
+	const isTimeRunning = useSelector(
+		(state: StateSchema) => state?.addTodoForm.todos[0]?.isTimerRunning
+	)
 
 	const totalSeconds = todos.reduce(
 		(acc, todo) => acc + todo.timeToComplete,
 		0
 	)
+
+	const handleStartButtonClick = () => {
+		if (activeTodo) {
+			dispatch(addTodoFormActions.startTimer(activeTodo.id))
+		}
+		return
+	}
 
 	return (
 		<section className={cls.section__app}>
@@ -51,14 +67,22 @@ const MainPage = () => {
 				</div>
 			</div>
 			<div className={cls.rightContent}>
-				<div className={cls.timerHeader}>
+				<div
+					className={classNames(cls.timerHeader, {
+						[cls.timerHeaderActiver]: isTimeRunning,
+					})}
+				>
 					<div>Сверстать сайт</div>
 					<div>Помидор 1</div>
 				</div>
 				<div className={cls.timerBlock}>
 					<span className={cls.timerContent}>
-						<span className={cls.timer}>
-							{formatTime(totalSeconds, 'timer')}
+						<span
+							className={classNames(cls.timer, {
+								[cls.timerActive]: isTimeRunning,
+							})}
+						>
+							{timeTodo ? formatTime(timeTodo, 'timer') : '00:00'}
 						</span>
 						<span className={cls.iconBtnActionAddTime}>
 							<AddTimeBigAction />
@@ -67,8 +91,19 @@ const MainPage = () => {
 				</div>
 				<div className={cls.taskTimer}>Задача 1 - Сверстать сайт</div>
 				<div className={cls.btnTimerAction}>
-					<Button theme={ThemeButton.PRIMARY}>Старт</Button>
-					<Button theme={ThemeButton.OUTLINE}>Стоп</Button>
+					<Button
+						className={classNames(cls.timerButtonStart, {})}
+						onClick={handleStartButtonClick}
+					>
+						{isTimeRunning ? 'Пауза' : 'Старт'}
+					</Button>
+					<Button
+						className={classNames(cls.timerButtonStopUnactive, {
+							[cls.timerButtonStopActive]: isTimeRunning,
+						})}
+					>
+						Стоп
+					</Button>
 				</div>
 			</div>
 		</section>

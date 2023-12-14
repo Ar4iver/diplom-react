@@ -13,7 +13,7 @@ export const TodoList = ({ className, todos }: TodoListProps) => {
 	return (
 		<div className={classNames(cls.TodoList, {}, [className])}>
 			{todos.map((todo: Todo, id) => (
-				<TodoItem todo={todo} id={id} key={id} />
+				<TodoItem todo={todo} key={id} id={id} />
 			))}
 		</div>
 	)

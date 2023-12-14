@@ -48,6 +48,11 @@
     margin-bottom: 70px;
 }
 
+.timerHeaderActiver {
+    background-color: var(--secondary-color);
+    color: var(--text-color-primary);
+}
+
 .timerBlock {
     display: flex;
     justify-content: center;
@@ -58,6 +63,31 @@
         font-family: 'SF UI Display';
         font-weight: 200;
     }
+
+    .timerActive {
+        color: var(--secondary-color);
+    }
+}
+
+.timerButtonStart {
+    background: var(--btn-color-primary);
+    padding: 15px 50px;
+    color: var(--text-color-primary);
+    border: none;
+}
+
+.timerButtonStopUnactive {
+    padding: 15px 50px;
+    border: 1px solid var(--bg-color2);
+    color: var(--bg-color2);
+    background: none;
+}
+
+.timerButtonStopActive {
+    padding: 15px 50px;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    background: none;
 }
 
 .iconBtnActionAddTime {

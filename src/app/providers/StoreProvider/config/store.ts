@@ -1,6 +1,8 @@
 import { ReducersMapObject, configureStore } from '@reduxjs/toolkit'
 import { StateSchema } from './StateSchema'
+import thunk from 'redux-thunk'
 import { addTodoFormReducer } from 'features/addTodoPomodoro'
+import { useDispatch } from 'react-redux'
 
 /***
  * ReducersMapObject - позволяет структурировать и обьединять множество редьюсеров
@@ -16,7 +18,11 @@ export function createReduxStore(initialState?: StateSchema) {
 
 	return configureStore<StateSchema>({
 		reducer: rootReducers,
+		middleware: [thunk],
 		devTools: __IS_DEV__,
 		preloadedState: initialState,
 	})
 }
+
+export const useAppDispatch = () => useDispatch<AppDispatch>()
+export type AppDispatch = ReturnType<typeof createReduxStore>['dispatch']

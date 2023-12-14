@@ -13,13 +13,11 @@ import { addTodoFormActions } from 'features/addTodoPomodoro'
 
 interface TodoItemProps {
 	className?: string
-	id: number
 	todo: Todo
+	id: number
 }
 
 export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
-	const todoId = id + 1
-
 	const dispatch = useDispatch()
 
 	const handleRemoveTodo = useCallback(
@@ -29,14 +27,10 @@ export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
 		[dispatch]
 	)
 
-	// const handleRemoveTodo = (id: number) => {
-	// 	dispatch(addTodoFormActions.removeTodo(id))
-	// }
-
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
 			<div className={cls.contentTodo}>
-				<div className={cls.circle}>{todoId}</div>
+				<div className={cls.circle}>{id}</div>
 				<div>{todo?.todoText}</div>
 			</div>
 			<div className={cls.actionBtn}>

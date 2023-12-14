@@ -8,7 +8,7 @@ export function formatTime(value: number, format: string) {
 	const seconds = (value % 60).toString().padStart(2, '0')
 
 	if (format === 'timer') {
-		return `${hours}:${minutes}:${seconds}`
+		return `${minutes}:${seconds}`
 	} else if (format === 'sumTime') {
 		return `${
 			hours === '00' ? '' : `${hours} час `

@@ -12,3 +12,11 @@ export const getAddTodoFormError = (state: StateSchema) =>
 
 export const getStateFirstTimeCompleteTodo = (state: StateSchema) =>
 	state?.addTodoForm?.todos[0]?.timeToComplete
+
+// export const getStateFirstTimeCompleteTodo = (state: StateSchema) =>
+// 	state?.addTodoForm?.todos[0]?.timeToComplete ?? 0
+
+export const getIsTimerRunning = (state: StateSchema) => {
+	const firstTodo = state?.addTodoForm.todos[0]
+	return firstTodo ? firstTodo.isTimerRunning : false
+}
