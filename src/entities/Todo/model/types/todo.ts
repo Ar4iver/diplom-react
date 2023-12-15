@@ -4,4 +4,7 @@ export interface Todo {
 	timeToComplete: number
 	complete: boolean
 	isTimerRunning: boolean
+	isTimerFinish: boolean | null
+	isTimerPaused: boolean | null
+	isTimerResume: boolean | null
 }

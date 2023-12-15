@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoItem.module.scss'
 import IncrButtontime from 'shared/assets/icons/add_time_icon.svg'
@@ -8,29 +8,25 @@ import DeleteButtonTodo from 'shared/assets/icons/delete_icon.svg'
 import ButtonActionDropdown from 'shared/assets/icons/btn-action-dpd-todo.svg'
 import { Todo } from 'entities/Todo/model/types/todo'
 import { Dropdown } from 'shared/ui/Dropdowm/Dropdown'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 import { addTodoFormActions } from 'features/addTodoPomodoro'
 
 interface TodoItemProps {
 	className?: string
 	todo: Todo
-	id: number
 }
 
-export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
-	const dispatch = useDispatch()
+export const TodoItem = ({ className, todo }: TodoItemProps) => {
+	const dispatch = useAppDispatch()
 
-	const handleRemoveTodo = useCallback(
-		(id: number) => {
-			dispatch(addTodoFormActions.removeTodo(id))
-		},
-		[dispatch]
-	)
+	const handleRemoveTodo = (id: number) => {
+		dispatch(addTodoFormActions.removeTodo(id))
+	}
 
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
 			<div className={cls.contentTodo}>
-				<div className={cls.circle}>{id}</div>
+				<div className={cls.circle}>{todo.id}</div>
 				<div>{todo?.todoText}</div>
 			</div>
 			<div className={cls.actionBtn}>
@@ -75,7 +71,7 @@ export const TodoItem = ({ className, todo, id }: TodoItemProps) => {
 									<span>Удалить</span>
 								</div>
 							),
-							onClick: () => handleRemoveTodo(id),
+							onClick: () => handleRemoveTodo(todo.id),
 						},
 					]}
 					trigger={<ButtonActionDropdown />}

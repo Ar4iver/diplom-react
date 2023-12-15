@@ -8,9 +8,6 @@ import { Todo } from 'entities/Todo'
  *
  */
 
-//После старта запускается итерация по массиву todo. На каждой итерации берётся значение timeToComplete и идёт отсчёт.
-//По завершению этого отсчёта итерация продолжается до тех пор пока есть todo в списке.
-
 const loadTodos = () => {
 	const savedTodos = localStorage.getItem('todos')
 	return savedTodos ? JSON.parse(savedTodos) : []
@@ -26,7 +23,6 @@ const initialState: AddTodoPomodoroSchema = {
 	timeToComplete: 10, //25 минут в секундах
 	complete: false,
 	todos: loadTodos(),
-	isTimerRunning: false,
 }
 
 export const addTodoFormSlice = createSlice({
@@ -44,6 +40,9 @@ export const addTodoFormSlice = createSlice({
 					timeToComplete: 10, // Initial time (in seconds)
 					complete: false,
 					isTimerRunning: false,
+					isTimerFinish: null,
+					isTimerPaused: null,
+					isTimerResume: null,
 				}
 
 				state.todos.push(newTodo)
@@ -53,33 +52,48 @@ export const addTodoFormSlice = createSlice({
 			}
 		},
 		startTimer: (state, action: PayloadAction<number>) => {
-			const todo = state.todos.find((t) => t.id === action.payload)
+			const todo = state.todos.find((item) => item.id === action.payload)
 
 			if (todo) {
 				todo.isTimerRunning = true
+				todo.isTimerFinish = false
 			}
 		},
 		tickTimer: (state, action: PayloadAction<number>) => {
-			const todo = state.todos.find((t) => t.id === action.payload)
+			const todo = state.todos.find((item) => item.id === action.payload)
 
-			if (todo && todo.isTimerRunning) {
+			if (todo) {
 				todo.timeToComplete -= 1
 
-				if (todo.timeToComplete <= 0) {
+				if (todo.timeToComplete === 0) {
 					todo.isTimerRunning = false
-					todo.complete = true
+					todo.isTimerFinish = true
 				}
 			}
 		},
-		addTimeToComplete: (state, action: PayloadAction<number>) => {
-			const todo = state.todos.find((t) => t.id === action.payload)
+		pauseTimer: (state, action: PayloadAction<number>) => {
+			const todo = state.todos.find((item) => item.id === action.payload)
 
 			if (todo) {
-				todo.timeToComplete += 300 // 5 minutes in seconds
+				todo.isTimerPaused = true
+			}
+		},
+		resumeTimer: (state, action: PayloadAction<number>) => {
+			const todo = state.todos.find((item) => item.id === action.payload)
+
+			if (todo) {
+				todo.isTimerResume = true
+			}
+		},
+		addTimeToComplete: (state, action: PayloadAction<number>) => {
+			const todo = state.todos.find((item) => item.id === action.payload)
+
+			if (todo) {
+				todo.timeToComplete += 300
 			}
 		},
 		subtractTimeToComplete: (state, action: PayloadAction<number>) => {
-			const todo = state.todos.find((t) => t.id === action.payload)
+			const todo = state.todos.find((item) => item.id === action.payload)
 
 			if (todo && todo.timeToComplete >= 300) {
 				todo.timeToComplete -= 300

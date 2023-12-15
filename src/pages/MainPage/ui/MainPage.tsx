@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import cls from './MainPage.module.scss'
 import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.svg'
 import { TodoForm, addTodoFormActions } from 'features/addTodoPomodoro'
@@ -14,15 +14,26 @@ import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 const MainPage = () => {
 	const dispatch = useAppDispatch()
 	const todos = useSelector(getTodos)
+	const [timerId, setTimerId] = useState<NodeJS.Timeout>()
 	const activeTodo = todos.length > 0 ? todos[0] : null
 
-	const timeTodo = useSelector(
-		(state: StateSchema) => state?.addTodoForm?.todos[0]?.timeToComplete
-	)
+	// const completeTodo = useSelector(
+	// 	(state: StateSchema) => state.addTodoForm.todos[0].complete
+	// )
 
 	const isTimeRunning = useSelector(
-		(state: StateSchema) => state?.addTodoForm.todos[0]?.isTimerRunning
+		(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerRunning
 	)
+
+	const isTimerPaused = useSelector(
+		(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerPaused
+	)
+
+	// const isTimerFinish = useSelector(
+	// 	(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerFinish
+	// )
+
+	const timeTodo = activeTodo?.timeToComplete
 
 	const totalSeconds = todos.reduce(
 		(acc, todo) => acc + todo.timeToComplete,
@@ -33,8 +44,27 @@ const MainPage = () => {
 		if (activeTodo) {
 			dispatch(addTodoFormActions.startTimer(activeTodo.id))
 		}
-		return
+
+		const id = setInterval(() => {
+			if (activeTodo?.id) {
+				dispatch(addTodoFormActions.tickTimer(activeTodo.id))
+			}
+		}, 1000)
+
+		setTimerId(id)
 	}
+
+	// const handlePausedButtonClick = () => {}
+	// const handleResumeButtonClick = () => {}
+
+	/**
+	 * Наблюдаем за изменением isTimeRunning, чтобы отработать остановку таймера
+	 */
+	useEffect(() => {
+		if (!isTimeRunning && isTimerPaused) {
+			clearInterval(timerId)
+		}
+	}, [isTimeRunning, isTimerPaused, timeTodo, timerId])
 
 	return (
 		<section className={cls.section__app}>

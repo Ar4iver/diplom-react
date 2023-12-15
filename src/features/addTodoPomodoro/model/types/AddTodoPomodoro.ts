@@ -6,5 +6,4 @@ export interface AddTodoPomodoroSchema {
 	todos: Todo[]
 	timeToComplete: number
 	complete: boolean
-	isTimerRunning: boolean
 }
