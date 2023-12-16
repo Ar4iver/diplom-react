@@ -42,10 +42,17 @@ export const addTodoFormSlice = createSlice({
 					isTimerRunning: false,
 					isTimerFinish: null,
 					isTimerPaused: null,
+					isTimerStop: null,
 					isTimerResume: null,
 				}
 
 				state.todos.push(newTodo)
+
+				/**Обновляем порядковый номер элементов массива, чтобы они были корректными после добавления новой задачи */
+				state.todos.forEach((todo, index) => {
+					todo.id = index + 1
+				})
+
 				saveTodos(state.todos)
 			} else {
 				state.error = 'Поле ввода пустое'
@@ -54,7 +61,7 @@ export const addTodoFormSlice = createSlice({
 		startTimer: (state, action: PayloadAction<number>) => {
 			const todo = state.todos.find((item) => item.id === action.payload)
 
-			if (todo) {
+			if (todo && todo.timeToComplete != 0) {
 				todo.isTimerRunning = true
 				todo.isTimerFinish = false
 			}
@@ -62,14 +69,16 @@ export const addTodoFormSlice = createSlice({
 		tickTimer: (state, action: PayloadAction<number>) => {
 			const todo = state.todos.find((item) => item.id === action.payload)
 
-			if (todo) {
+			if (todo && todo.timeToComplete != 0) {
 				todo.timeToComplete -= 1
-
+				console.log('я тут')
 				if (todo.timeToComplete === 0) {
 					todo.isTimerRunning = false
 					todo.isTimerFinish = true
+					console.log('я и тут')
 				}
 			}
+			console.log('я тут тоже')
 		},
 		pauseTimer: (state, action: PayloadAction<number>) => {
 			const todo = state.todos.find((item) => item.id === action.payload)
@@ -82,7 +91,7 @@ export const addTodoFormSlice = createSlice({
 			const todo = state.todos.find((item) => item.id === action.payload)
 
 			if (todo) {
-				todo.isTimerResume = true
+				todo.isTimerPaused = false
 			}
 		},
 		addTimeToComplete: (state, action: PayloadAction<number>) => {
@@ -97,12 +106,22 @@ export const addTodoFormSlice = createSlice({
 
 			if (todo && todo.timeToComplete >= 300) {
 				todo.timeToComplete -= 300
+			} else {
+				if (todo) {
+					todo.timeToComplete = 0
+				}
 			}
 		},
 		removeTodo: (state, action: PayloadAction<number>) => {
 			state.todos = state.todos.filter(
 				(todo) => todo.id !== action.payload
 			)
+
+			/**Обновляем порядковый номер элементов массива, чтобы они были корректными после удаления */
+			state.todos.forEach((todo, index) => {
+				todo.id = index + 1
+			})
+
 			saveTodos(state.todos)
 		},
 	},

@@ -7,4 +7,5 @@ export interface Todo {
 	isTimerFinish: boolean | null
 	isTimerPaused: boolean | null
 	isTimerResume: boolean | null
+	isTimerStop: boolean | null
 }
