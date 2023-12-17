@@ -88,6 +88,11 @@
     border: 1px solid var(--secondary-color);
     color: var(--secondary-color);
     background: none;
+
+    &:hover {
+        background: var(--secondary-color);
+        color: var(--text-color-primary)
+    }
 }
 
 .iconBtnActionAddTime {

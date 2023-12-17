@@ -34,6 +34,7 @@ export const TodoForm = memo(({ className }: TodoFormProps) => {
 
 	const onAddTodo = useCallback(() => {
 		dispatch(addTodoFormActions.addTodoTextInput(text))
+		
 	}, [dispatch, text])
 
 	return (

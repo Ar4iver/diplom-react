@@ -6,4 +6,5 @@ export interface AddTodoPomodoroSchema {
 	todos: Todo[]
 	timeToComplete: number
 	complete: boolean
+	editTodoId: string
 }

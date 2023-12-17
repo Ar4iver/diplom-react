@@ -25,12 +25,16 @@ const MainPage = () => {
 		(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerRunning
 	)
 
-	const isTimerStop = useSelector(
-		(state: StateSchema) => state?.addTodoForm.todos[0].isTimerStop
-	)
+	// const isTimerStop = useSelector(
+	// 	(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerStop
+	// )
 
 	const isTimerPaused = useSelector(
 		(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerPaused
+	)
+
+	const isTimerPausedBreak = useSelector(
+		(state: StateSchema) => state?.addTodoForm?.todos[0]?.isTimerPausedBreak
 	)
 
 	// const isTimerFinish = useSelector(
@@ -83,16 +87,19 @@ const MainPage = () => {
 	}
 	const handleStopButtonClick = () => {
 		console.log('Стоп')
+		if (activeTodo) {
+			dispatch(addTodoFormActions.stopTimer(activeTodo?.id))
+		}
 	}
-	const handleCompleteButtonClick = () => {
-		console.log('Сделано')
-	}
-	// const handleSkipButtonClick = () => {
-	// 	console.log('Пропустить')
+	// const handleCompleteButtonClick = () => {
+	// 	console.log('Сделано')
 	// }
+	const handleSkipButtonClick = () => {
+		console.log('Пропустить')
+	}
 
 	/**
-	 * Наблюдаем за изменением isTimeRunning, чтобы отработать остановку таймера
+	 * Наблюдаем за изменением isTimeRunning, isTimerPaused, timeTodo, timerId чтобы отработать остановку таймера
 	 */
 	useEffect(() => {
 		if (!isTimeRunning || isTimerPaused) {
@@ -157,13 +164,13 @@ const MainPage = () => {
 					Задача {activeTodo?.id} - {activeTodo?.todoText}
 				</div>
 				<div className={cls.btnTimerAction}>
-					{!isTimeRunning ? (
+					{isTimeRunning ? (
 						<>
 							<Button
 								className={classNames(cls.timerButtonStart, {})}
-								onClick={handleStartButtonClick}
+								onClick={handlePausedButtonClick}
 							>
-								Старт
+								Пауза
 							</Button>
 							<Button
 								className={classNames(
@@ -190,15 +197,36 @@ const MainPage = () => {
 									cls.timerButtonStopUnactive,
 									{
 										[cls.timerButtonStopActive]:
-											isTimeRunning,
+											isTimerPaused,
 									}
 								)}
-								onClick={handleCompleteButtonClick}
+								onClick={handleSkipButtonClick}
 							>
-								Сделано
+								Пропустить
 							</Button>
 						</>
-					) : isTimerStop ? (
+					) : isTimerPausedBreak ? (
+						<>
+							<Button
+								className={classNames(cls.timerButtonStart, {})}
+								onClick={handleStopButtonClick}
+							>
+								Продолжить
+							</Button>
+							<Button
+								className={classNames(
+									cls.timerButtonStopUnactive,
+									{
+										[cls.timerButtonStopActive]:
+											isTimerPausedBreak,
+									}
+								)}
+								onClick={handleSkipButtonClick}
+							>
+								Пропустить
+							</Button>
+						</>
+					) : (
 						<>
 							<Button
 								className={classNames(cls.timerButtonStart, {})}
@@ -214,28 +242,6 @@ const MainPage = () => {
 											isTimeRunning,
 									}
 								)}
-								onClick={handleStopButtonClick}
-							>
-								Стоп
-							</Button>
-						</>
-					) : (
-						<>
-							<Button
-								className={classNames(cls.timerButtonStart, {})}
-								onClick={handlePausedButtonClick}
-							>
-								Пауза
-							</Button>
-							<Button
-								className={classNames(
-									cls.timerButtonStopUnactive,
-									{
-										[cls.timerButtonStopActive]:
-											isTimeRunning,
-									}
-								)}
-								onClick={handleStopButtonClick}
 							>
 								Стоп
 							</Button>
