@@ -1,2 +1,2 @@
 export { TodoList } from './ui/TodoList/TodoList'
-export type { Todo } from './model/types/todo'
+export type { TaskSchema } from './model/types/todo'

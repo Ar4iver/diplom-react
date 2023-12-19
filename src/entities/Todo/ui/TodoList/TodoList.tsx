@@ -1,19 +1,19 @@
 import React from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoList.module.scss'
-import { Todo } from 'entities/Todo/model/types/todo'
 import { TodoItem } from '../TodoItem/TodoItem'
+import { TaskSchema } from 'entities/Todo/model/types/todo'
 
 interface TodoListProps {
 	className?: string
-	todos: Todo[]
+	tasks: TaskSchema
 }
 
-export const TodoList = ({ className, todos }: TodoListProps) => {
+export const TodoList = ({ className, tasks }: TodoListProps) => {
 	return (
 		<div className={classNames(cls.TodoList, {}, [className])}>
-			{todos.map((todo: Todo, id) => (
-				<TodoItem todo={todo} key={id} />
+			{Object.values(tasks).map((task, index) => (
+				<TodoItem {...task} key={index} />
 			))}
 		</div>
 	)

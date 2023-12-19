@@ -1,6 +1,3 @@
-export type { AddTodoPomodoroSchema } from './model/types/AddTodoPomodoro'
-export {
-	addTodoFormActions,
-	addTodoFormReducer,
-} from './model/slice/addTodoPomodoroFormSlice'
+export type { TaskState } from './model/types/task'
+export { taskActions, taskReducer } from './model/slice/taskSlice'
 export { TodoForm } from './ui/TodoForm/TodoForm'

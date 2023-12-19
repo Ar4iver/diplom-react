@@ -1,7 +1,7 @@
 import { ReducersMapObject, configureStore } from '@reduxjs/toolkit'
 import { StateSchema } from './StateSchema'
 import thunk from 'redux-thunk'
-import { addTodoFormReducer } from 'features/addTodoPomodoro'
+import { taskReducer } from 'features/addTodoPomodoro'
 import { useDispatch } from 'react-redux'
 
 /***
@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux'
 
 export function createReduxStore(initialState?: StateSchema) {
 	const rootReducers: ReducersMapObject<StateSchema> = {
-		addTodoForm: addTodoFormReducer,
+		tasks: taskReducer,
 	}
 
 	return configureStore<StateSchema>({

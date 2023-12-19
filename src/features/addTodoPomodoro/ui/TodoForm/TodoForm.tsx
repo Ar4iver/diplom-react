@@ -1,11 +1,9 @@
-import React, { memo, useCallback } from 'react'
+import React, { memo } from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoForm.module.scss'
 import { Button, ThemeButton } from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAddTodoFormText } from '../../model/selectors/selectTodoState/addTodoFormSelectors'
-import { addTodoFormActions } from '../../model/slice/addTodoPomodoroFormSlice'
+// import { useDispatch, useSelector } from 'react-redux'
 
 interface TodoFormProps {
 	className?: string
@@ -21,35 +19,34 @@ interface TodoFormProps {
 
 // eslint-disable-next-line react/display-name
 export const TodoForm = memo(({ className }: TodoFormProps) => {
-	const dispatch = useDispatch()
+	// const dispatch = useDispatch()
 
-	const text = useSelector(getAddTodoFormText)
+	// const text = useSelector(getAddTodoFormText)
 
-	const onChangeTodo = useCallback(
-		(value: string) => {
-			dispatch(addTodoFormActions.setTodoTextInput(value))
-		},
-		[dispatch]
-	)
+	// const onChangeTodo = useCallback(
+	// 	(value: string) => {
+	// 		dispatch(addTodoFormActions.setTodoTextInput(value))
+	// 	},
+	// 	[dispatch]
+	// )
 
-	const onAddTodo = useCallback(() => {
-		dispatch(addTodoFormActions.addTodoTextInput(text))
-		
-	}, [dispatch, text])
+	// const onAddTodo = useCallback(() => {
+	// 	dispatch(addTodoFormActions.addTodoTextInput(text))
+	// }, [dispatch, text])
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault()
-				onAddTodo()
+				// onAddTodo()
 			}}
 			className={classNames(cls.TodoForm, {}, [className])}
 		>
 			<Input
-				onChange={onChangeTodo}
+				// onChange={onChangeTodo}
 				type="text"
 				placeholder="Название задачи"
-				value={text}
+				// value={text}
 			/>
 			<Button theme={ThemeButton.PRIMARY}>Добавить</Button>
 		</form>

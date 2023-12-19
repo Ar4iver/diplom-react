@@ -1,5 +1,5 @@
-import { AddTodoPomodoroSchema } from 'features/addTodoPomodoro'
+import { TaskState } from 'features/addTodoPomodoro'
 
 export interface StateSchema {
-	addTodoForm: AddTodoPomodoroSchema
+	tasks: TaskState
 }
