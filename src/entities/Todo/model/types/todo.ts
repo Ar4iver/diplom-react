@@ -1,5 +1,5 @@
 export interface TaskSchema {
-	id: number
+	id: string
 	taskSummary: string
 	countPomidor: number
 	timeBreak: number

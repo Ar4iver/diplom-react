@@ -3,6 +3,7 @@ import { StateSchema } from './StateSchema'
 import thunk from 'redux-thunk'
 import { taskReducer } from 'features/addTodoPomodoro'
 import { useDispatch } from 'react-redux'
+import { formReducer } from 'features/addTodoPomodoro/model/slice/formSlice'
 
 /***
  * ReducersMapObject - позволяет структурировать и обьединять множество редьюсеров
@@ -14,6 +15,7 @@ import { useDispatch } from 'react-redux'
 export function createReduxStore(initialState?: StateSchema) {
 	const rootReducers: ReducersMapObject<StateSchema> = {
 		tasks: taskReducer,
+		form: formReducer,
 	}
 
 	return configureStore<StateSchema>({

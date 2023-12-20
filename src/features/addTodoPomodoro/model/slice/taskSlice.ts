@@ -1,6 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { TaskSchema } from 'entities/Todo'
 import { TaskState } from '../types/task'
+import { v4 as uuidv4 } from 'uuid'
+import { saveTasks } from 'shared/lib/helpers/saveTasks'
+import { loadTasks } from 'shared/lib/helpers/loadTasks'
 
 /**
  * С помощью PayloadAction мы можем определить что мы ожидаем внутри action (какие данные)
@@ -9,7 +12,7 @@ import { TaskState } from '../types/task'
  */
 
 const initialState: TaskState = {
-	tasks: {},
+	tasks: loadTasks(),
 }
 
 export const taskSlice = createSlice({
@@ -17,23 +20,27 @@ export const taskSlice = createSlice({
 	initialState,
 	reducers: {
 		setTaskList: (state, { payload }: PayloadAction<TaskSchema[]>) => {
-			state.tasks = payload.reduce((record, task: TaskSchema) => {
-				record[task.id] = task
-				return record
-			}, {} as Record<number, TaskSchema>)
+			state.tasks = payload
 		},
 		addTaskToList: (
 			state,
-			{ payload: task }: PayloadAction<TaskSchema>
+			{ payload: taskSummary }: PayloadAction<string>
 		) => {
-			state.tasks[task.id] = task
+			const newTask: TaskSchema = {
+				id: uuidv4(),
+				taskSummary: taskSummary,
+				countPomidor: 1,
+				timeBreak: 1,
+				timeLongBreak: 3,
+				isComplete: false,
+			}
+
+			state.tasks.push(newTask)
+			saveTasks(state.tasks)
 		},
-		removeTaskList: (
-			state,
-			{ payload: task }: PayloadAction<TaskSchema>
-		) => {
-			console.log(state.tasks[task.id])
-		},
+		// removeTask: (state, { payload: taskId }: PayloadAction<TaskSchema>) => {
+
+		// },
 	},
 })
 

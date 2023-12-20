@@ -7,30 +7,33 @@ import EditButtonTodo from 'shared/assets/icons/edit_icon.svg'
 import DeleteButtonTodo from 'shared/assets/icons/delete_icon.svg'
 import ButtonActionDropdown from 'shared/assets/icons/btn-action-dpd-todo.svg'
 import { Dropdown } from 'shared/ui/Dropdowm/Dropdown'
+import { TaskSchema } from 'entities/Todo/model/types/todo'
 
-interface TodoItemProps {
+interface TodoItemProps extends TaskSchema {
 	className?: string
-	id: number
+	id: string
 	taskSummary: string
 	countPomidor: number
 }
 
 export const TodoItem = (props: TodoItemProps) => {
-	const { className } = props
+	const { className, id, taskSummary, countPomidor } = props
+
+	// const dispatch = useAppDispatch()
 
 	// const handleRemoveTodo = () => {}
 
-	// const handleIncrementPomidorTodo = () => {}
+	const handleIncrementPomidorTodo = (id: string) => {
+		console.log('увеличиваем число помидоров у задачи с id:', id)
+	}
 
 	// const handleDecrementPomidorTodo = () => {}
 
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
 			<div className={cls.contentTodo}>
-				<div className={cls.circle}>
-					(количество помидоров для задачи)
-				</div>
-				<div>(описание задачи)</div>
+				<div className={cls.circle}>{countPomidor}</div>
+				<div>{taskSummary}</div>
 			</div>
 			<div className={cls.actionBtn}>
 				<Dropdown
@@ -44,7 +47,7 @@ export const TodoItem = (props: TodoItemProps) => {
 									<span>Увеличить</span>
 								</div>
 							),
-							// onClick: () => handleIncrementPomidorTodo(todo.id),
+							onClick: () => handleIncrementPomidorTodo(id),
 						},
 						{
 							content: (

@@ -1,9 +1,9 @@
-// import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
+import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 
 // // export const getTodoState = (state: StateSchema) => state?.addTodoForm
 
-// export const getAddTodoFormText = (state: StateSchema) =>
-// 	state?.addTodoForm?.todo
+export const getAddTodoFormText = (state: StateSchema) =>
+	state?.form?.taskSummaryInput
 
 // export const getTodos = (state: StateSchema) => state?.addTodoForm?.todos
 
