@@ -6,8 +6,8 @@ import { Button } from 'shared/ui/Button/Button'
 import { formatTime } from 'shared/lib/helpers/formatTime'
 import { classNames } from 'shared/lib/classNames/classNames'
 import { useSelector } from 'react-redux'
-import { TodoList } from 'entities/Todo'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
+import { TodoList } from 'entities/Task'
 
 const totalSeconds = 10
 const timeTodo = 5

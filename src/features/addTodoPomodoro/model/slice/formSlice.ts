@@ -14,7 +14,6 @@ export const formSlice = createSlice({
 			{ payload: taskSummaryInput }: PayloadAction<string>
 		) => {
 			state.taskSummaryInput = taskSummaryInput
-			taskSummaryInput = ''
 		},
 	},
 })

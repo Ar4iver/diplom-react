@@ -1,9 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { TaskSchema } from 'entities/Todo'
-import { TaskState } from '../types/task'
 import { v4 as uuidv4 } from 'uuid'
 import { saveTasks } from 'shared/lib/helpers/saveTasks'
 import { loadTasks } from 'shared/lib/helpers/loadTasks'
+import { TaskSchema, TasksState } from '../types/task'
 
 /**
  * С помощью PayloadAction мы можем определить что мы ожидаем внутри action (какие данные)
@@ -11,7 +10,7 @@ import { loadTasks } from 'shared/lib/helpers/loadTasks'
  *
  */
 
-const initialState: TaskState = {
+const initialState: TasksState = {
 	tasks: loadTasks(),
 }
 
@@ -19,17 +18,12 @@ export const taskSlice = createSlice({
 	name: 'tasks',
 	initialState,
 	reducers: {
-		setTaskList: (state, { payload }: PayloadAction<TaskSchema[]>) => {
-			state.tasks = payload
-		},
-		addTaskToList: (
-			state,
-			{ payload: taskSummary }: PayloadAction<string>
-		) => {
+		addTaskToList: (state, action: PayloadAction<string>) => {
 			const newTask: TaskSchema = {
 				id: uuidv4(),
-				taskSummary: taskSummary,
+				taskSummary: action.payload,
 				countPomidor: 1,
+				taskTime: 5,
 				timeBreak: 1,
 				timeLongBreak: 3,
 				isComplete: false,
@@ -38,9 +32,31 @@ export const taskSlice = createSlice({
 			state.tasks.push(newTask)
 			saveTasks(state.tasks)
 		},
-		// removeTask: (state, { payload: taskId }: PayloadAction<TaskSchema>) => {
+		removeTask: (state, action: PayloadAction<string>) => {
+			state.tasks = state.tasks.filter(
+				(task) => task.id !== action.payload
+			)
 
-		// },
+			saveTasks(state.tasks)
+		},
+		incrementTaskPomidor: (state, action: PayloadAction<string>) => {
+			const task = state.tasks.find((item) => item.id === action.payload)
+
+			if (task) {
+				task.countPomidor += 1
+			}
+
+			saveTasks(state.tasks)
+		},
+		decrementTaskPomidor: (state, action: PayloadAction<string>) => {
+			const task = state.tasks.find((item) => item.id === action.payload)
+
+			if (task) {
+				task.countPomidor -= 1
+			}
+
+			saveTasks(state.tasks)
+		},
 	},
 })
 

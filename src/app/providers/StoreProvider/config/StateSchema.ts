@@ -1,7 +1,7 @@
-import { TaskState } from 'features/addTodoPomodoro'
+import { TasksState } from 'entities/Task/model/types/task'
 import { FormState } from 'features/addTodoPomodoro/model/types/form'
 
 export interface StateSchema {
-	tasks: TaskState
+	tasks: TasksState
 	form: FormState
 }

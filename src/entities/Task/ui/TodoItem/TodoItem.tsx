@@ -7,27 +7,37 @@ import EditButtonTodo from 'shared/assets/icons/edit_icon.svg'
 import DeleteButtonTodo from 'shared/assets/icons/delete_icon.svg'
 import ButtonActionDropdown from 'shared/assets/icons/btn-action-dpd-todo.svg'
 import { Dropdown } from 'shared/ui/Dropdowm/Dropdown'
-import { TaskSchema } from 'entities/Todo/model/types/todo'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
+import { taskActions } from 'entities/Task/model/slice/taskSlice'
+import { TaskSchema } from 'entities/Task/model/types/task'
 
-interface TodoItemProps extends TaskSchema {
+/**TypeScript Utility Types - полчаем тип непосредственно из структуры */
+type TaskId = TaskSchema['id']
+type CountPomidor = TaskSchema['countPomidor']
+
+interface TodoItemProps {
 	className?: string
-	id: string
+	id: TaskId
 	taskSummary: string
-	countPomidor: number
+	countPomidor: CountPomidor
 }
 
 export const TodoItem = (props: TodoItemProps) => {
 	const { className, id, taskSummary, countPomidor } = props
 
-	// const dispatch = useAppDispatch()
+	const dispatch = useAppDispatch()
 
-	// const handleRemoveTodo = () => {}
-
-	const handleIncrementPomidorTodo = (id: string) => {
-		console.log('увеличиваем число помидоров у задачи с id:', id)
+	const handleRemoveTask = (id: TaskId) => {
+		dispatch(taskActions.removeTask(id))
 	}
 
-	// const handleDecrementPomidorTodo = () => {}
+	const handleIncrementPomidorTask = (id: TaskId) => {
+		dispatch(taskActions.incrementTaskPomidor(id))
+	}
+
+	const handleDecrementPomidorTask = (id: TaskId) => {
+		dispatch(taskActions.decrementTaskPomidor(id))
+	}
 
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
@@ -47,7 +57,7 @@ export const TodoItem = (props: TodoItemProps) => {
 									<span>Увеличить</span>
 								</div>
 							),
-							onClick: () => handleIncrementPomidorTodo(id),
+							onClick: () => handleIncrementPomidorTask(id),
 						},
 						{
 							content: (
@@ -58,7 +68,7 @@ export const TodoItem = (props: TodoItemProps) => {
 									<span>Уменьшить</span>
 								</div>
 							),
-							// onClick: () => handleDecrementPomidorTodo(todo.id),
+							onClick: () => handleDecrementPomidorTask(id),
 						},
 						{
 							content: (
@@ -80,7 +90,7 @@ export const TodoItem = (props: TodoItemProps) => {
 									<span>Удалить</span>
 								</div>
 							),
-							// onClick: () => handleRemoveTodo(todo.id),
+							onClick: () => handleRemoveTask(id),
 						},
 					]}
 					trigger={<ButtonActionDropdown />}

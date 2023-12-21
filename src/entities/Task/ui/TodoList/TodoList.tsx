@@ -2,12 +2,11 @@ import React from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoList.module.scss'
 import { TodoItem } from '../TodoItem/TodoItem'
-import { TaskState } from 'features/addTodoPomodoro'
-import { TaskSchema } from 'entities/Todo/model/types/todo'
+import { TaskSchema, TasksState } from 'entities/Task/model/types/task'
 
 interface TodoListProps {
 	className?: string
-	tasks: TaskState
+	tasks: TasksState
 }
 
 export const TodoList = ({ className, tasks: { tasks } }: TodoListProps) => {

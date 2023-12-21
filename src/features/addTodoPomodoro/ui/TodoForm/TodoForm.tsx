@@ -7,7 +7,7 @@ import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 import { formActions } from 'features/addTodoPomodoro/model/slice/formSlice'
 import { getAddTodoFormText } from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
 import { useSelector } from 'react-redux'
-import { taskActions } from 'features/addTodoPomodoro/model/slice/taskSlice'
+import { taskActions } from 'entities/Task'
 // import { useDispatch, useSelector } from 'react-redux'
 
 interface TodoFormProps {
