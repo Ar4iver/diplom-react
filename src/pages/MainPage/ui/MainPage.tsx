@@ -1,13 +1,13 @@
 import React from 'react'
 import cls from './MainPage.module.scss'
 import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.svg'
-import { TodoForm } from 'features/addTodoPomodoro'
 import { Button } from 'shared/ui/Button/Button'
 import { formatTime } from 'shared/lib/helpers/formatTime'
 import { classNames } from 'shared/lib/classNames/classNames'
 import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { TodoList } from 'entities/Task'
+import { TodoForm } from 'features/taskForm'
 
 const totalSeconds = 10
 const timeTodo = 5

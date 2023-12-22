@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
 import { saveTasks } from 'shared/lib/helpers/saveTasks'
 import { loadTasks } from 'shared/lib/helpers/loadTasks'
-import { TaskSchema, TasksState } from '../types/task'
+import { TaskId, TaskSchema, TaskSummary, TasksState } from '../types/task'
 
 /**
  * С помощью PayloadAction мы можем определить что мы ожидаем внутри action (какие данные)
@@ -21,6 +21,7 @@ export const taskSlice = createSlice({
 		addTaskToList: (state, action: PayloadAction<string>) => {
 			const newTask: TaskSchema = {
 				id: uuidv4(),
+				isEdit: false,
 				taskSummary: action.payload,
 				countPomidor: 1,
 				taskTime: 5,
@@ -56,6 +57,19 @@ export const taskSlice = createSlice({
 			}
 
 			saveTasks(state.tasks)
+		},
+		editTask: (
+			state,
+			action: PayloadAction<{ id: TaskId; taskSummary: TaskSummary }>
+		) => {
+			const task = state.tasks.find(
+				(item) => item.id === action.payload.id
+			)
+
+			if (task) {
+				task.taskSummary = action.payload.taskSummary
+				saveTasks(state.tasks)
+			}
 		},
 	},
 })

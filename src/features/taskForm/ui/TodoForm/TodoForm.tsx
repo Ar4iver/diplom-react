@@ -4,11 +4,10 @@ import cls from './TodoForm.module.scss'
 import { Button, ThemeButton } from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { formActions } from 'features/addTodoPomodoro/model/slice/formSlice'
-import { getAddTodoFormText } from 'features/addTodoPomodoro/model/selectors/selectTodoState/addTodoFormSelectors'
 import { useSelector } from 'react-redux'
 import { taskActions } from 'entities/Task'
-// import { useDispatch, useSelector } from 'react-redux'
+import { formActions } from 'features/taskForm/model/slice/formSlice'
+import { getAddTaskFormText } from 'features/taskForm/model/selectors/selectFormState/taskForm'
 
 interface TodoFormProps {
 	className?: string
@@ -26,28 +25,23 @@ interface TodoFormProps {
 export const TodoForm = memo(({ className }: TodoFormProps) => {
 	const dispatch = useAppDispatch()
 
-	const taskSummary = useSelector(getAddTodoFormText)
+	const taskSummary = useSelector(getAddTaskFormText)
 
 	const onChangeTask = useCallback(
 		(value: string) => {
-			dispatch(formActions.setTodoTextInput(value))
+			dispatch(formActions.setTaskTextInput(value))
 		},
 		[dispatch]
 	)
 
-	// const onAddTodo = useCallback(() => {
-	// 	dispatch(addTodoFormActions.addTodoTextInput(text))
-	// }, [dispatch, text])
-
-	const addTask = () => {
+	const addTask = useCallback(() => {
 		dispatch(taskActions.addTaskToList(taskSummary))
-	}
+	}, [dispatch, taskSummary])
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault()
-				// onAddTodo()
 			}}
 			className={classNames(cls.TodoForm, {}, [className])}
 		>

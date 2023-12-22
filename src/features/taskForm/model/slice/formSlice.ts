@@ -3,17 +3,19 @@ import { FormState } from '../types/form'
 
 const initialState: FormState = {
 	taskSummaryInput: '',
+	taskSummaryEditInput: '',
 }
 
 export const formSlice = createSlice({
 	name: 'form',
 	initialState,
 	reducers: {
-		setTodoTextInput: (
-			state,
-			{ payload: taskSummaryInput }: PayloadAction<string>
-		) => {
-			state.taskSummaryInput = taskSummaryInput
+		setTaskTextInput: (state, action: PayloadAction<string>) => {
+			state.taskSummaryInput = action.payload
+		},
+
+		setTaskEditInput: (state, action: PayloadAction<string>) => {
+			state.taskSummaryEditInput = action.payload
 		},
 	},
 })
