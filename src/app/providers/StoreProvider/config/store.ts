@@ -4,6 +4,7 @@ import thunk from 'redux-thunk'
 import { useDispatch } from 'react-redux'
 import { taskReducer } from 'entities/Task'
 import { formReducer } from 'features/taskForm'
+import { timerReducer } from 'features/taskTimer/model/slice/timerSlice'
 
 /***
  * ReducersMapObject - позволяет структурировать и обьединять множество редьюсеров
@@ -16,6 +17,7 @@ export function createReduxStore(initialState?: StateSchema) {
 	const rootReducers: ReducersMapObject<StateSchema> = {
 		tasks: taskReducer,
 		form: formReducer,
+		timer: timerReducer,
 	}
 
 	return configureStore<StateSchema>({

@@ -7,6 +7,7 @@ export interface TaskSchema {
 	timeBreak: number
 	timeLongBreak: number
 	isComplete: boolean
+	isActive: boolean
 }
 
 export type TasksState = {

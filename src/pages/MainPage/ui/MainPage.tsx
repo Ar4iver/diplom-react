@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import cls from './MainPage.module.scss'
 import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.svg'
 import { Button } from 'shared/ui/Button/Button'
@@ -8,12 +8,40 @@ import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { TodoList } from 'entities/Task'
 import { TodoForm } from 'features/taskForm'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
+import { timerActions } from 'features/taskTimer/model/slice/timerSlice'
 
-const totalSeconds = 10
-const timeTodo = 5
+const totalSeconds = 100
+const timeTodos = 200
 
 const MainPage = () => {
+	const dispatch = useAppDispatch()
+
+	const [timerId, setTimerId] = useState<NodeJS.Timeout>()
 	const tasks = useSelector((state: StateSchema) => state.tasks)
+	const timeTask = useSelector(
+		(state: StateSchema) => state?.tasks?.tasks[0]?.taskTime
+	)
+
+	const taskTimer = useSelector((state: StateSchema) => state.timer.timer)
+
+	const t = () => {
+		const id = setInterval(() => {
+			dispatch(timerActions.tickTimerTask())
+		}, 1000)
+
+		setTimerId(id)
+	}
+
+	useEffect(() => {
+		if (timeTask === 0) {
+			clearInterval(timerId)
+		}
+	}, [timeTask, timerId])
+
+	useEffect(() => {
+		dispatch(timerActions.setTimerValue(timeTask))
+	}, [dispatch, taskTimer, timeTask])
 
 	return (
 		<section className={cls.section__app}>
@@ -41,7 +69,7 @@ const MainPage = () => {
 						<TodoList tasks={tasks} />
 					</div>
 					<span>
-						{timeTodo ? formatTime(totalSeconds, 'sumTime') : ''}
+						{timeTodos ? formatTime(totalSeconds, 'sumTime') : ''}
 					</span>
 				</div>
 			</div>
@@ -55,7 +83,9 @@ const MainPage = () => {
 				<div className={cls.timerBlock}>
 					<span className={cls.timerContent}>
 						<span className={classNames(cls.timer, {})}>
-							{timeTodo ? formatTime(timeTodo, 'timer') : '00:00'}
+							{taskTimer
+								? formatTime(taskTimer, 'timer')
+								: '00:00'}
 						</span>
 						<span className={cls.iconBtnActionAddTime}>
 							<AddTimeBigAction />
@@ -68,9 +98,10 @@ const MainPage = () => {
 				<div className={cls.btnTimerAction}>
 					<>
 						<Button
+							onClick={t}
 							className={classNames(cls.timerButtonStart, {})}
 						>
-							Пауза
+							Старт
 						</Button>
 						<Button
 							className={classNames(

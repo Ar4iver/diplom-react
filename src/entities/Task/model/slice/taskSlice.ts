@@ -24,10 +24,11 @@ export const taskSlice = createSlice({
 				isEdit: false,
 				taskSummary: action.payload,
 				countPomidor: 1,
-				taskTime: 5,
+				taskTime: 1500,
 				timeBreak: 1,
 				timeLongBreak: 3,
 				isComplete: false,
+				isActive: false,
 			}
 
 			state.tasks.push(newTask)
