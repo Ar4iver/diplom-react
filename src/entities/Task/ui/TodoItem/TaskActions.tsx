@@ -12,34 +12,18 @@ interface TaskActionsProps {
 	onDecrement?: (id: TaskId) => void
 	onEdit?: (id: TaskId, taskSummary: TaskSummary) => void
 	onRemove?: (id: TaskId) => void
-	onChangeState?: (id: TaskId) => void
 	id: TaskId
 	taskSummary: TaskSummary
 }
 
 export const TaskDropdownActions = (props: TaskActionsProps) => {
-	const {
-		onIncrement,
-		onDecrement,
-		onEdit,
-		onRemove,
-		onChangeState,
-		id,
-		taskSummary,
-	} = props
+	const { onIncrement, onDecrement, onEdit, onRemove, id, taskSummary } =
+		props
 
 	return (
 		<div>
 			<Dropdown
 				items={[
-					{
-						content: (
-							<div>
-								<span>Сделать активной</span>
-							</div>
-						),
-						onClick: () => onChangeState && onChangeState(id),
-					},
 					{
 						content: (
 							<div>

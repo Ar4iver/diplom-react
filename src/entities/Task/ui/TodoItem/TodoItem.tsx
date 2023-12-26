@@ -14,7 +14,6 @@ import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { formActions } from 'features/taskForm'
 import { TaskDropdownActions } from './TaskActions'
-import { timerActions } from 'features/taskTimer/model/slice/timerSlice'
 
 /**TypeScript Utility Types - полчаем тип непосредственно из структуры */
 interface TodoItemProps {
@@ -56,11 +55,6 @@ export const TodoItem = (props: TodoItemProps) => {
 		setEdit(false)
 	}
 
-	const handleChangeStateTask = (id: TaskId) => {
-		console.log(id)
-		dispatch(timerActions.setActiveTask(id))
-	}
-
 	const onChangeEditTask = (value: string) => {
 		dispatch(formActions.setTaskEditInput(value))
 	}
@@ -97,7 +91,6 @@ export const TodoItem = (props: TodoItemProps) => {
 					onDecrement={handleDecrementPomidorTask}
 					onEdit={openEdit}
 					onRemove={handleRemoveTask}
-					onChangeState={handleChangeStateTask}
 				/>
 			</div>
 		</div>

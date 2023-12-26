@@ -72,6 +72,17 @@ export const taskSlice = createSlice({
 				saveTasks(state.tasks)
 			}
 		},
+		tickTimerTask: (state, action: PayloadAction<TaskId>) => {
+			const task = state.tasks.find((item) => item.id === action.payload)
+
+			if (task) {
+				if (task.taskTime != 0) {
+					task.taskTime -= 1
+				}
+			}
+
+			saveTasks(state.tasks)
+		},
 	},
 })
 

@@ -2,7 +2,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { TimerState } from '../types/timer'
 import { loadTasks } from 'shared/lib/helpers/loadTasks'
 import { TaskId } from 'entities/Task/model/types/task'
-import { saveActiveTask } from 'shared/lib/helpers/saveActiveTask'
 import { checkActiveTask } from 'shared/lib/helpers/checkActiveTask'
 
 const initialState: TimerState = {
@@ -23,27 +22,11 @@ export const timerSlice = createSlice({
 			const task = state.tasks.find((item) => item.id === action.payload)
 
 			if (task) {
-				if (task.isActive != true) {
-					state.activeTask = task.id
-				} else {
-					state.tasks[0].id
-				}
+				state.activeTask = task
 			}
-
-			saveActiveTask(task?.id)
 		},
 		startTimer: (state) => {
 			state.isRunning = true
-		},
-		tickTimerTask: (state) => {
-			const activeTask =
-				state.activeTask != '' ? state.activeTask : state.tasks[0].id
-
-			const task = state.tasks.find((item) => item.id === activeTask)
-
-			if (task) {
-				task.taskTime -= 1
-			}
 		},
 	},
 })

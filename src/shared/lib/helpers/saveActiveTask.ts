@@ -1,3 +1,3 @@
-export const saveActiveTask = (activeTask?: string) => {
+export const saveActiveTask = (activeTask?: object) => {
 	localStorage.setItem('activeTask', JSON.stringify(activeTask))
 }

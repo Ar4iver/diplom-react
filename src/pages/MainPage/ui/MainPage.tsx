@@ -6,28 +6,35 @@ import { formatTime } from 'shared/lib/helpers/formatTime'
 import { classNames } from 'shared/lib/classNames/classNames'
 import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
-import { TodoList } from 'entities/Task'
+import { TodoList, taskActions } from 'entities/Task'
 import { TodoForm } from 'features/taskForm'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 import { timerActions } from 'features/taskTimer/model/slice/timerSlice'
+import {
+	getAddActiveTask,
+	getAddActiveTaskTime,
+} from 'features/taskTimer/model/selectors/timerState/timer'
 
 const totalSeconds = 100
 const timeTodos = 200
 
 const MainPage = () => {
 	const dispatch = useAppDispatch()
+	const activeTask = useSelector(getAddActiveTask)
+	const timeTask = useSelector(getAddActiveTaskTime)
+
+	console.log(activeTask)
 
 	const [timerId, setTimerId] = useState<NodeJS.Timeout>()
 	const tasks = useSelector((state: StateSchema) => state.tasks)
-	const timeTask = useSelector(
-		(state: StateSchema) => state?.tasks?.tasks[0]?.taskTime
-	)
-
-	const taskTimer = useSelector((state: StateSchema) => state.timer.timer)
+	//Время активной задачи для таймера
+	// const timeTask = useSelector(
+	// 	(state: StateSchema) => state?.timer?.activeTask?.taskTime
+	// )
 
 	const t = () => {
 		const id = setInterval(() => {
-			dispatch(timerActions.tickTimerTask())
+			dispatch(taskActions.tickTimerTask(activeTask.id))
 		}, 1000)
 
 		setTimerId(id)
@@ -40,8 +47,9 @@ const MainPage = () => {
 	}, [timeTask, timerId])
 
 	useEffect(() => {
-		dispatch(timerActions.setTimerValue(timeTask))
-	}, [dispatch, taskTimer, timeTask])
+		dispatch(timerActions.setTimerValue(activeTask.taskTime))
+		dispatch(timerActions.setActiveTask(activeTask.id))
+	}, [dispatch, activeTask, tasks])
 
 	return (
 		<section className={cls.section__app}>
@@ -83,9 +91,7 @@ const MainPage = () => {
 				<div className={cls.timerBlock}>
 					<span className={cls.timerContent}>
 						<span className={classNames(cls.timer, {})}>
-							{taskTimer
-								? formatTime(taskTimer, 'timer')
-								: '00:00'}
+							{timeTask ? formatTime(timeTask, 'timer') : '00:00'}
 						</span>
 						<span className={cls.iconBtnActionAddTime}>
 							<AddTimeBigAction />
