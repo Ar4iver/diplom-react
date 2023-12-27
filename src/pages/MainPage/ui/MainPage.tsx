@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import cls from './MainPage.module.scss'
 import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.svg'
 import { Button } from 'shared/ui/Button/Button'
@@ -9,47 +9,38 @@ import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { TodoList, taskActions } from 'entities/Task'
 import { TodoForm } from 'features/taskForm'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { timerActions } from 'features/taskTimer/model/slice/timerSlice'
-import {
-	getAddActiveTask,
-	getAddActiveTaskTime,
-} from 'features/taskTimer/model/selectors/timerState/timer'
+import { selectActiveTask } from 'entities/Task/model/selectors/task'
 
 const totalSeconds = 100
 const timeTodos = 200
 
 const MainPage = () => {
 	const dispatch = useAppDispatch()
-	const activeTask = useSelector(getAddActiveTask)
-	const timeTask = useSelector(getAddActiveTaskTime)
-
-	console.log(activeTask)
-
-	const [timerId, setTimerId] = useState<NodeJS.Timeout>()
+	const [intervalId, setIntervalId] = useState<NodeJS.Timeout>()
 	const tasks = useSelector((state: StateSchema) => state.tasks)
-	//Время активной задачи для таймера
-	// const timeTask = useSelector(
-	// 	(state: StateSchema) => state?.timer?.activeTask?.taskTime
-	// )
+	const activeTask = useSelector(selectActiveTask)
 
-	const t = () => {
+	const startTimer = () => {
 		const id = setInterval(() => {
-			dispatch(taskActions.tickTimerTask(activeTask.id))
+			for (let i = 0; i < tasks.tasks.length; i++) {
+				console.log()
+				const task = tasks.tasks[i]
+				dispatch(taskActions.startTimer(task.id))
+				if (task.taskTime > 0) {
+					dispatch(taskActions.tickTimerTask(task.id))
+					break
+				}
+			}
 		}, 1000)
-
-		setTimerId(id)
+		setIntervalId(id)
 	}
 
-	useEffect(() => {
-		if (timeTask === 0) {
-			clearInterval(timerId)
+	const stopTimer = () => {
+		if (intervalId) {
+			clearInterval(intervalId)
+			setIntervalId(intervalId)
 		}
-	}, [timeTask, timerId])
-
-	useEffect(() => {
-		dispatch(timerActions.setTimerValue(activeTask.taskTime))
-		dispatch(timerActions.setActiveTask(activeTask.id))
-	}, [dispatch, activeTask, tasks])
+	}
 
 	return (
 		<section className={cls.section__app}>
@@ -83,15 +74,15 @@ const MainPage = () => {
 			</div>
 			<div className={cls.rightContent}>
 				<div className={classNames(cls.timerHeader, {})}>
-					<div>Название todo</div>
-					<div>
-						Помидор ( какой по счёту помидор для конкретной задачи )
-					</div>
+					<div>{activeTask?.taskSummary}</div>
+					<div>Помидор {activeTask?.countPomidor}</div>
 				</div>
 				<div className={cls.timerBlock}>
 					<span className={cls.timerContent}>
 						<span className={classNames(cls.timer, {})}>
-							{timeTask ? formatTime(timeTask, 'timer') : '00:00'}
+							{activeTask?.taskTime
+								? formatTime(activeTask.taskTime, 'timer')
+								: '00:00'}
 						</span>
 						<span className={cls.iconBtnActionAddTime}>
 							<AddTimeBigAction />
@@ -104,8 +95,8 @@ const MainPage = () => {
 				<div className={cls.btnTimerAction}>
 					<>
 						<Button
-							onClick={t}
 							className={classNames(cls.timerButtonStart, {})}
+							onClick={startTimer}
 						>
 							Старт
 						</Button>
@@ -114,6 +105,7 @@ const MainPage = () => {
 								cls.timerButtonStopUnactive,
 								{}
 							)}
+							onClick={stopTimer}
 						>
 							Стоп
 						</Button>
