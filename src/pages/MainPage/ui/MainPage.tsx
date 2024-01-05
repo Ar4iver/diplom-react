@@ -9,36 +9,59 @@ import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { TodoList, taskActions } from 'entities/Task'
 import { TodoForm } from 'features/taskForm'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { selectActiveTask } from 'entities/Task/model/selectors/task'
+import {
+	selectActiveTask,
+	selectActiveTaskTime,
+	selectActiveTaskСountPomidor,
+} from 'entities/Task/model/selectors/task'
+import { store } from 'app/providers/StoreProvider/ui/StoreProvider'
 
 const totalSeconds = 100
 const timeTodos = 200
 
 const MainPage = () => {
+	const [repeat, setRepeat] = useState(false)
+	const index = 0
 	const dispatch = useAppDispatch()
-	const [intervalId, setIntervalId] = useState<NodeJS.Timeout>()
-	const tasks = useSelector((state: StateSchema) => state.tasks)
 	const activeTask = useSelector(selectActiveTask)
+	const tasks = useSelector((state: StateSchema) => state.tasks)
 
-	const startTimer = () => {
-		const id = setInterval(() => {
-			for (let i = 0; i < tasks.tasks.length; i++) {
-				console.log()
-				const task = tasks.tasks[i]
-				dispatch(taskActions.startTimer(task.id))
-				if (task.taskTime > 0) {
-					dispatch(taskActions.tickTimerTask(task.id))
-					break
+	const startTimer = (index: number) => {
+		if (index < tasks.tasks.length) {
+			console.log(repeat)
+			if (!repeat) {
+				console.log('обычная итерация')
+				dispatch(taskActions.setActiveTask(tasks.tasks[index].id))
+			} else {
+				if (tasks.activeTaskId) {
+					console.log('повторная итерация')
+					dispatch(taskActions.setActiveTask(tasks.activeTaskId.id))
 				}
 			}
-		}, 1000)
-		setIntervalId(id)
-	}
-
-	const stopTimer = () => {
-		if (intervalId) {
-			clearInterval(intervalId)
-			setIntervalId(intervalId)
+			const id = setInterval(() => {
+				const activeTaskTime = selectActiveTaskTime(store.getState())
+				const activeTaskCountPomidor = selectActiveTaskСountPomidor(
+					store.getState()
+				)
+				const activeTask = selectActiveTask(store.getState())
+				if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
+					console.log('следующая помидорка')
+					setRepeat(true)
+					startTimer(index + 1)
+					clearInterval(id)
+				} else {
+					if (activeTaskTime == 0 && activeTaskCountPomidor != 1) {
+						console.log('повтор помидорки', activeTaskCountPomidor)
+						setRepeat(false)
+						dispatch(taskActions.tickPomidorTask(activeTask!.id))
+						startTimer(index)
+						clearInterval(id)
+					}
+					dispatch(taskActions.tickTimerTask())
+				}
+			}, 1000)
+		} else {
+			console.log('всё')
 		}
 	}
 
@@ -81,7 +104,7 @@ const MainPage = () => {
 					<span className={cls.timerContent}>
 						<span className={classNames(cls.timer, {})}>
 							{activeTask?.taskTime
-								? formatTime(activeTask.taskTime, 'timer')
+								? formatTime(activeTask?.taskTime, 'timer')
 								: '00:00'}
 						</span>
 						<span className={cls.iconBtnActionAddTime}>
@@ -96,7 +119,7 @@ const MainPage = () => {
 					<>
 						<Button
 							className={classNames(cls.timerButtonStart, {})}
-							onClick={startTimer}
+							onClick={() => startTimer(index)}
 						>
 							Старт
 						</Button>
@@ -105,7 +128,7 @@ const MainPage = () => {
 								cls.timerButtonStopUnactive,
 								{}
 							)}
-							onClick={stopTimer}
+							// onClick={stopTimer}
 						>
 							Стоп
 						</Button>

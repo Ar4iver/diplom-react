@@ -35,10 +35,17 @@ export const taskSlice = createSlice({
 			state.tasks.push(newTask)
 			saveTasks(state.tasks)
 		},
-		startTimer: (state, action: PayloadAction<TaskId>) => {
-			const taskId = action.payload
+		setActiveTask: (state, action: PayloadAction<TaskId>) => {
+			const task = state.tasks.find((item) => item.id === action.payload)
 
-			state.activeTaskId = taskId
+			if (task) {
+				state.activeTaskId = task
+			}
+		},
+		setActiveTaskTime: (state, action: PayloadAction<number>) => {
+			if (state.activeTaskId) {
+				state.activeTaskId.taskTime = action.payload
+			}
 		},
 		removeTask: (state, action: PayloadAction<string>) => {
 			state.tasks = state.tasks.filter(
@@ -78,13 +85,23 @@ export const taskSlice = createSlice({
 				saveTasks(state.tasks)
 			}
 		},
-		tickTimerTask: (state, action: PayloadAction<TaskId>) => {
+		tickTimerTask: (state) => {
+			const activeTask = state.activeTaskId
+
+			if (activeTask && activeTask.taskTime != 0) {
+				activeTask.taskTime -= 1
+			}
+
+			saveTasks(state.tasks)
+		},
+		tickPomidorTask: (state, action: PayloadAction<TaskId>) => {
 			const task = state.tasks.find((item) => item.id === action.payload)
 
-			if (task) {
-				if (task.taskTime != 0) {
-					task.taskTime -= 1
-				}
+			const activeTask = state.activeTaskId
+
+			if (task && activeTask && activeTask.countPomidor != 1) {
+				task.countPomidor -= 1
+				activeTask.countPomidor -= 1
 			}
 
 			saveTasks(state.tasks)

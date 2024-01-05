@@ -12,7 +12,7 @@ export interface TaskSchema {
 
 export type TasksState = {
 	tasks: TaskSchema[]
-	activeTaskId: null | string
+	activeTaskId: TaskSchema | null
 }
 
 export type TaskId = TaskSchema['id']
