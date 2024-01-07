@@ -13,6 +13,8 @@ import { TaskId, TaskSchema, TaskSummary, TasksState } from '../types/task'
 const initialState: TasksState = {
 	tasks: loadTasks(),
 	activeTaskId: null,
+	breakTimeShort: 5,
+	breakTimeLong: 10,
 }
 
 export const taskSlice = createSlice({
@@ -26,8 +28,6 @@ export const taskSlice = createSlice({
 				taskSummary: action.payload,
 				countPomidor: 1,
 				taskTime: 5,
-				timeBreak: 1,
-				timeLongBreak: 3,
 				isComplete: false,
 				isActive: false,
 			}
@@ -106,8 +106,19 @@ export const taskSlice = createSlice({
 
 			saveTasks(state.tasks)
 		},
+		tickBreakTime: (state, action: PayloadAction<number>) => {
+			const timeDuration = action.payload
+
+			if (timeDuration === 10) {
+				state.breakTimeLong -= 1
+			} else if (timeDuration === 5) {
+				state.breakTimeShort -= 1
+			}
+		},
 	},
 })
 
 export const { actions: taskActions } = taskSlice
 export const { reducer: taskReducer } = taskSlice
+
+

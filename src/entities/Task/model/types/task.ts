@@ -4,8 +4,6 @@ export interface TaskSchema {
 	taskSummary: string
 	countPomidor: number
 	taskTime: number
-	timeBreak: number
-	timeLongBreak: number
 	isComplete: boolean
 	isActive: boolean
 }
@@ -13,6 +11,8 @@ export interface TaskSchema {
 export type TasksState = {
 	tasks: TaskSchema[]
 	activeTaskId: TaskSchema | null
+	breakTimeShort: number
+	breakTimeLong: number
 }
 
 export type TaskId = TaskSchema['id']

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import cls from './MainPage.module.scss'
 import AddTimeBigAction from 'shared/assets/icons/btn__action__timer__add_big.svg'
 import { Button } from 'shared/ui/Button/Button'
@@ -20,24 +20,16 @@ const totalSeconds = 100
 const timeTodos = 200
 
 const MainPage = () => {
-	const [repeat, setRepeat] = useState(false)
 	const index = 0
+
 	const dispatch = useAppDispatch()
 	const activeTask = useSelector(selectActiveTask)
 	const tasks = useSelector((state: StateSchema) => state.tasks)
 
 	const startTimer = (index: number) => {
 		if (index < tasks.tasks.length) {
-			console.log(repeat)
-			if (!repeat) {
-				console.log('обычная итерация')
-				dispatch(taskActions.setActiveTask(tasks.tasks[index].id))
-			} else {
-				if (tasks.activeTaskId) {
-					console.log('повторная итерация')
-					dispatch(taskActions.setActiveTask(tasks.activeTaskId.id))
-				}
-			}
+			dispatch(taskActions.setActiveTask(tasks.tasks[index].id))
+
 			const id = setInterval(() => {
 				const activeTaskTime = selectActiveTaskTime(store.getState())
 				const activeTaskCountPomidor = selectActiveTaskСountPomidor(
@@ -46,22 +38,20 @@ const MainPage = () => {
 				const activeTask = selectActiveTask(store.getState())
 				if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
 					console.log('следующая помидорка')
-					setRepeat(true)
 					startTimer(index + 1)
 					clearInterval(id)
 				} else {
 					if (activeTaskTime == 0 && activeTaskCountPomidor != 1) {
 						console.log('повтор помидорки', activeTaskCountPomidor)
-						setRepeat(false)
 						dispatch(taskActions.tickPomidorTask(activeTask!.id))
 						startTimer(index)
 						clearInterval(id)
 					}
-					dispatch(taskActions.tickTimerTask())
 				}
+				dispatch(taskActions.tickTimerTask())
 			}, 1000)
 		} else {
-			console.log('всё')
+			console.log('Все задачи завершены')
 		}
 	}
 
@@ -140,3 +130,35 @@ const MainPage = () => {
 }
 
 export default MainPage
+
+// const breakTimer = (index: number) => {
+// 	const breakDuration =
+// 		countSessionTask > 3 ? 'breakTimeLong' : 'breakTimeShort'
+
+// 	if (breakDuration === 'breakTimeLong') {
+// 		setDuration(10)
+// 		const intervalId = setInterval(() => {
+// 			setDuration((prev) => {
+// 				if (prev === 1) {
+// 					clearInterval(intervalId)
+// 					startTimer(index)
+// 					return prev
+// 				}
+// 				return prev - 1
+// 			})
+// 		}, 1000)
+// 		countSessionTask = 0
+// 	} else if (breakDuration === 'breakTimeShort') {
+// 		setDuration(5)
+// 		const intervalId = setInterval(() => {
+// 			setDuration((prev) => {
+// 				if (prev === 1) {
+// 					clearInterval(intervalId)
+// 					startTimer(index)
+// 					return prev
+// 				}
+// 				return prev - 1
+// 			})
+// 		}, 1000)
+// 	}
+// }
