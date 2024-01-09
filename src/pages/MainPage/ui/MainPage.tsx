@@ -13,6 +13,7 @@ import {
 	selectActiveTask,
 	selectActiveTaskTime,
 	selectActiveTaskСountPomidor,
+	setBreakTimeShort,
 } from 'entities/Task/model/selectors/task'
 import { store } from 'app/providers/StoreProvider/ui/StoreProvider'
 
@@ -20,89 +21,98 @@ const totalSeconds = 100
 const timeTodos = 200
 
 const MainPage = () => {
-	const index = 0
+	
 
 	const dispatch = useAppDispatch()
 	const activeTask = useSelector(selectActiveTask)
 	const tasks = useSelector((state: StateSchema) => state.tasks)
-	const [breakIsTimeOut, setBreakIsTimeOut] = useState(false)
-	const [breakTime, setBreakTime] = useState(5)
 
-	const startTimer = useCallback(
-		(index: number) => {
-			if (index < tasks.tasks.length) {
-				dispatch(taskActions.setActiveTask(tasks.tasks[index].id))
-				const id = setInterval(() => {
-					const activeTaskTime = selectActiveTaskTime(
-						store.getState()
-					)
-					const activeTaskCountPomidor = selectActiveTaskСountPomidor(
-						store.getState()
-					)
-					const activeTask = selectActiveTask(store.getState())
-					if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
-						console.log('следующая помидорка')
-						setBreakIsTimeOut(true)
+	const [ sessionCount, setSessionCount ] = useState(0)
+
+	const [ indexTask, setIndexTask ] = useState(0)
+	const [nextTask, setNextTask] = useState(false)
+	const [nextPomidorTask, setNextPomidorTask] = useState(false)
+
+
+	const startTimer = (indexTask: number) => {
+		console.log(indexTask)
+		if (indexTask < tasks.tasks.length) {
+			dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
+			const id = setInterval(() => {
+				const activeTaskTime = selectActiveTaskTime(
+					store.getState()
+				)
+				const activeTaskCountPomidor = selectActiveTaskСountPomidor(
+					store.getState()
+				)
+				const activeTask = selectActiveTask(store.getState())
+				if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
+					console.log('следующая задача')
+					setNextTask(true)
+					clearInterval(id)
+				} else {
+					if (
+						activeTaskTime == 0 &&
+						activeTaskCountPomidor != 1
+					) {
+						console.log(
+							'повтор помидорки',
+							activeTaskCountPomidor
+						)
+						dispatch(
+							taskActions.tickPomidorTask(activeTask!.id)
+						)
+						setNextPomidorTask(true)
 						clearInterval(id)
-					} else {
-						if (
-							activeTaskTime == 0 &&
-							activeTaskCountPomidor != 1
-						) {
-							console.log(
-								'повтор помидорки',
-								activeTaskCountPomidor
-							)
-							dispatch(
-								taskActions.tickPomidorTask(activeTask!.id)
-							)
-							setBreakIsTimeOut(true)
-							clearInterval(id)
-						}
 					}
-					dispatch(taskActions.tickTimerTask())
-				}, 1000)
-			} else {
-				console.log('Все задачи завершены')
-			}
-		},
-		[dispatch, tasks.tasks]
-	)
-
-	let breakTimerId: any
-
-	//сделать два разных таймера на короткий и длинный
-	const breakTimer = (index: number) => {
-		console.log('перерыв начался', breakTime)
-		breakTimerId = setInterval(() => {
-			setBreakTime((prevBreakTime) => {
-				if (prevBreakTime === 0) {
-					clearInterval(breakTimerId)
-					setBreakIsTimeOut(false)
-					setBreakTime(10)
-					startTimer(index)
 				}
-				return prevBreakTime - 1
-			})
-		}, 1000)
+				dispatch(taskActions.tickTimerTask())
+			}, 1000)
+		} else {
+			console.log('Все задачи завершены')
+			setIndexTask(0)
+		}
 	}
 
+	
+
 	useEffect(() => {
-		if (breakIsTimeOut) {
-			breakTimer(index)
+		if (nextPomidorTask) {
+			console.log('запустилcя слудующий помидор задачи')
+			startTimer(indexTask)
+			setNextPomidorTask(false)
 		}
-		return () => {
-			if (breakTimerId) {
-				clearInterval(breakTimerId)
+	}, [nextPomidorTask])
+
+	useEffect(() => {
+		if (nextTask) {
+			setIndexTask(prev => {
+				const newIndex = prev + 1;
+				console.log('индекс новой задачи', newIndex);
+				startTimer(newIndex); 
+				return newIndex;
+			});
+			setNextTask(false);
+		}
+	}, [nextTask]);
+
+	//эффект с перерывом
+	useEffect(() => {
+		setSessionCount(prev => {
+			if(prev === 4) {
+				
+			} else {
+				
 			}
-		}
-	}, [breakIsTimeOut, breakTimerId])
+			return prev
+		})
+	}, [sessionCount])
 
 	return (
 		<section className={cls.section__app}>
 			<div className={cls.leftContent}>
 				<div className={cls.task__descr}>
-					<h2>Ура! Теперь можно начать работать:</h2>
+					<h2>Теперь можно начать работать:</h2>
 					<ul>
 						<li>Выберите категорию и напишите название задачи</li>
 						<li>Запустите таймер («помидор»)</li>
@@ -152,7 +162,7 @@ const MainPage = () => {
 					<>
 						<Button
 							className={classNames(cls.timerButtonStart, {})}
-							onClick={() => startTimer(index)}
+							onClick={() => startTimer(indexTask)}
 						>
 							Старт
 						</Button>
@@ -161,7 +171,7 @@ const MainPage = () => {
 								cls.timerButtonStopUnactive,
 								{}
 							)}
-							// onClick={stopTimer}
+						// onClick={stopTimer}
 						>
 							Стоп
 						</Button>
