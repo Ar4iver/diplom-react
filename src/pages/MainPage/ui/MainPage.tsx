@@ -25,35 +25,78 @@ const MainPage = () => {
 	const dispatch = useAppDispatch()
 	const activeTask = useSelector(selectActiveTask)
 	const tasks = useSelector((state: StateSchema) => state.tasks)
+	const [breakIsTimeOut, setBreakIsTimeOut] = useState(false)
+	const [breakTime, setBreakTime] = useState(5)
 
-	const startTimer = (index: number) => {
-		if (index < tasks.tasks.length) {
-			dispatch(taskActions.setActiveTask(tasks.tasks[index].id))
-
-			const id = setInterval(() => {
-				const activeTaskTime = selectActiveTaskTime(store.getState())
-				const activeTaskCountPomidor = selectActiveTaskСountPomidor(
-					store.getState()
-				)
-				const activeTask = selectActiveTask(store.getState())
-				if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
-					console.log('следующая помидорка')
-					startTimer(index + 1)
-					clearInterval(id)
-				} else {
-					if (activeTaskTime == 0 && activeTaskCountPomidor != 1) {
-						console.log('повтор помидорки', activeTaskCountPomidor)
-						dispatch(taskActions.tickPomidorTask(activeTask!.id))
-						startTimer(index)
+	const startTimer = useCallback(
+		(index: number) => {
+			if (index < tasks.tasks.length) {
+				dispatch(taskActions.setActiveTask(tasks.tasks[index].id))
+				const id = setInterval(() => {
+					const activeTaskTime = selectActiveTaskTime(
+						store.getState()
+					)
+					const activeTaskCountPomidor = selectActiveTaskСountPomidor(
+						store.getState()
+					)
+					const activeTask = selectActiveTask(store.getState())
+					if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
+						console.log('следующая помидорка')
+						setBreakIsTimeOut(true)
 						clearInterval(id)
+					} else {
+						if (
+							activeTaskTime == 0 &&
+							activeTaskCountPomidor != 1
+						) {
+							console.log(
+								'повтор помидорки',
+								activeTaskCountPomidor
+							)
+							dispatch(
+								taskActions.tickPomidorTask(activeTask!.id)
+							)
+							setBreakIsTimeOut(true)
+							clearInterval(id)
+						}
 					}
+					dispatch(taskActions.tickTimerTask())
+				}, 1000)
+			} else {
+				console.log('Все задачи завершены')
+			}
+		},
+		[dispatch, tasks.tasks]
+	)
+
+	let breakTimerId: any
+
+	//сделать два разных таймера на короткий и длинный
+	const breakTimer = (index: number) => {
+		console.log('перерыв начался', breakTime)
+		breakTimerId = setInterval(() => {
+			setBreakTime((prevBreakTime) => {
+				if (prevBreakTime === 0) {
+					clearInterval(breakTimerId)
+					setBreakIsTimeOut(false)
+					setBreakTime(10)
+					startTimer(index)
 				}
-				dispatch(taskActions.tickTimerTask())
-			}, 1000)
-		} else {
-			console.log('Все задачи завершены')
-		}
+				return prevBreakTime - 1
+			})
+		}, 1000)
 	}
+
+	useEffect(() => {
+		if (breakIsTimeOut) {
+			breakTimer(index)
+		}
+		return () => {
+			if (breakTimerId) {
+				clearInterval(breakTimerId)
+			}
+		}
+	}, [breakIsTimeOut, breakTimerId])
 
 	return (
 		<section className={cls.section__app}>
