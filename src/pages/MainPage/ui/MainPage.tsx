@@ -9,104 +9,41 @@ import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { TodoList, taskActions } from 'entities/Task'
 import { TodoForm } from 'features/taskForm'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import {
-	selectActiveTask,
-	selectActiveTaskTime,
-	selectActiveTaskСountPomidor,
-	setBreakTimeShort,
-} from 'entities/Task/model/selectors/task'
-import { store } from 'app/providers/StoreProvider/ui/StoreProvider'
 
 const totalSeconds = 100
 const timeTodos = 200
 
 const MainPage = () => {
-	
+
 
 	const dispatch = useAppDispatch()
-	const activeTask = useSelector(selectActiveTask)
 	const tasks = useSelector((state: StateSchema) => state.tasks)
+    const activeTask = useSelector((state: StateSchema) => state.tasks.activeTaskId);
+	const activeTaskTime = useSelector((state: StateSchema) => state.tasks.activeTaskId?.taskTime);
+    const activeTaskCountPomidor = useSelector((state: StateSchema) => state.tasks.activeTaskId?.countPomidor);
 
-	const [ sessionCount, setSessionCount ] = useState(0)
 
-	const [ indexTask, setIndexTask ] = useState(0)
-	const [nextTask, setNextTask] = useState(false)
-	const [nextPomidorTask, setNextPomidorTask] = useState(false)
+	const [indexTask, setIndexTask] = useState(0)
+
+
+
 
 
 	const startTimer = (indexTask: number) => {
-		console.log(indexTask)
-		if (indexTask < tasks.tasks.length) {
-			dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
-			const id = setInterval(() => {
-				const activeTaskTime = selectActiveTaskTime(
-					store.getState()
-				)
-				const activeTaskCountPomidor = selectActiveTaskСountPomidor(
-					store.getState()
-				)
-				const activeTask = selectActiveTask(store.getState())
-				if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
-					console.log('следующая задача')
-					setNextTask(true)
-					clearInterval(id)
-				} else {
-					if (
-						activeTaskTime == 0 &&
-						activeTaskCountPomidor != 1
-					) {
-						console.log(
-							'повтор помидорки',
-							activeTaskCountPomidor
-						)
-						dispatch(
-							taskActions.tickPomidorTask(activeTask!.id)
-						)
-						setNextPomidorTask(true)
-						clearInterval(id)
-					}
-				}
-				dispatch(taskActions.tickTimerTask())
-			}, 1000)
-		} else {
-			console.log('Все задачи завершены')
-			setIndexTask(0)
+		if(indexTask < tasks.tasks.length) {
+			
 		}
 	}
 
-	
 
+
+	///Что будет после первого запуска приложения
 	useEffect(() => {
-		if (nextPomidorTask) {
-			console.log('запустилcя слудующий помидор задачи')
-			startTimer(indexTask)
-			setNextPomidorTask(false)
+		if(tasks.tasks.length != 0) {
+			dispatch(taskActions.setActiveTask(tasks.tasks[0].id))
 		}
-	}, [nextPomidorTask])
+	}, [])	
 
-	useEffect(() => {
-		if (nextTask) {
-			setIndexTask(prev => {
-				const newIndex = prev + 1;
-				console.log('индекс новой задачи', newIndex);
-				startTimer(newIndex); 
-				return newIndex;
-			});
-			setNextTask(false);
-		}
-	}, [nextTask]);
-
-	//эффект с перерывом
-	useEffect(() => {
-		setSessionCount(prev => {
-			if(prev === 4) {
-				
-			} else {
-				
-			}
-			return prev
-		})
-	}, [sessionCount])
 
 	return (
 		<section className={cls.section__app}>
@@ -184,34 +121,92 @@ const MainPage = () => {
 
 export default MainPage
 
-// const breakTimer = (index: number) => {
-// 	const breakDuration =
-// 		countSessionTask > 3 ? 'breakTimeLong' : 'breakTimeShort'
 
-// 	if (breakDuration === 'breakTimeLong') {
-// 		setDuration(10)
-// 		const intervalId = setInterval(() => {
-// 			setDuration((prev) => {
-// 				if (prev === 1) {
-// 					clearInterval(intervalId)
-// 					startTimer(index)
-// 					return prev
-// 				}
-// 				return prev - 1
-// 			})
-// 		}, 1000)
-// 		countSessionTask = 0
-// 	} else if (breakDuration === 'breakTimeShort') {
-// 		setDuration(5)
-// 		const intervalId = setInterval(() => {
-// 			setDuration((prev) => {
-// 				if (prev === 1) {
-// 					clearInterval(intervalId)
-// 					startTimer(index)
-// 					return prev
-// 				}
-// 				return prev - 1
-// 			})
-// 		}, 1000)
-// 	}
-// }
+	// const startTimer = (indexTask: number) => {
+	// 	console.log(indexTask)
+	// 	if (indexTask < tasks.tasks.length) {
+	// 		dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
+	// 		const id = setInterval(() => {
+	// 			const activeTaskTime = selectActiveTaskTime(
+	// 				store.getState()
+	// 			)
+	// 			const activeTaskCountPomidor = selectActiveTaskСountPomidor(
+	// 				store.getState()
+	// 			)
+	// 			const activeTask = selectActiveTask(store.getState())
+	// 			if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
+	// 				console.log('следующая задача')
+	// 				setNextTask(true)
+	// 				clearInterval(id)
+	// 			} else {
+	// 				if (
+	// 					activeTaskTime == 0 &&
+	// 					activeTaskCountPomidor != 1
+	// 				) {
+	// 					console.log(
+	// 						'повтор помидорки',
+	// 						activeTaskCountPomidor
+	// 					)
+	// 					dispatch(
+	// 						taskActions.tickPomidorTask(activeTask!.id)
+	// 					)
+
+	// 					setNextPomidorTask(true)
+	// 					clearInterval(id)
+	// 				}
+	// 			}
+	// 			dispatch(taskActions.tickTimerTask())
+	// 		}, 1000)
+	// 	} else {
+	// 		console.log('Все задачи завершены')
+	// 		setIndexTask(0)
+	// 	}
+	// }
+
+
+	// const startTimer = (indexTask: number) => {
+	// 	console.log(indexTask)
+	// 	if (indexTask < tasks.tasks.length) {
+	// 		dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
+	// 		const id = setInterval(() => {
+	// 			const activeTaskTime = selectActiveTaskTime(
+	// 				store.getState()
+	// 			)
+	// 			const activeTaskCountPomidor = selectActiveTaskСountPomidor(
+	// 				store.getState()
+	// 			)
+	// 			const activeTask = selectActiveTask(store.getState())
+
+	// 			if()
+
+	// 			dispatch(taskActions.tickTimerTask())
+	// 		}, 1000)
+	// 	} else {
+	// 		console.log('Все задачи завершены')
+	// 		setIndexTask(0)
+	// 	}
+	// }
+	
+	// useEffect(() => {
+
+	// }, [])
+
+	// useEffect(() => {
+	// 	if (nextPomidorTask) {
+	// 		console.log('запустилcя слудующий помидор задачи')
+	// 		startTimer(indexTask)
+	// 		setNextPomidorTask(false)
+	// 	}
+	// }, [nextPomidorTask])
+
+	// useEffect(() => {
+	// 	if (nextTask) {
+	// 		setIndexTask(prev => {
+	// 			const newIndex = prev + 1;
+	// 			console.log('индекс новой задачи', newIndex);
+	// 			startTimer(newIndex);
+	// 			return newIndex;
+	// 		});
+	// 		setNextTask(false);
+	// 	}
+	// }, [nextTask]);
