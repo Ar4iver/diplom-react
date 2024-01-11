@@ -18,31 +18,95 @@ const MainPage = () => {
 
 	const dispatch = useAppDispatch()
 	const tasks = useSelector((state: StateSchema) => state.tasks)
-    const activeTask = useSelector((state: StateSchema) => state.tasks.activeTaskId);
-	const activeTaskTime = useSelector((state: StateSchema) => state.tasks.activeTaskId?.taskTime);
-    const activeTaskCountPomidor = useSelector((state: StateSchema) => state.tasks.activeTaskId?.countPomidor);
+	const activeTask = useSelector((state: StateSchema) => state.tasks.activeTask);
+	const activeTaskTime = useSelector((state: StateSchema) => state.tasks.activeTask?.taskTime);
+	const activeTaskCountPomidor = useSelector((state: StateSchema) => state.tasks.activeTask?.countPomidor);
 
+	const [startTimerApp, setStartTimerApp] = useState(false)
 
 	const [indexTask, setIndexTask] = useState(0)
+	const [countSession, setCountSession] = useState(1)
+
+	const [timebreakLong, setTimeBreakLong] = useState(10)
+	const [timebreakShort, setTimeBreakShort] = useState(5)
+	const [isBreak, setIsBreak] = useState(false)
 
 
-
-
-
-	const startTimer = (indexTask: number) => {
-		if(indexTask < tasks.tasks.length) {
-			
-		}
+	const startTimer = () => {
+		setStartTimerApp(true)
 	}
 
+
+	//Выполнить то, если isBreak изменился.
+	useEffect(() => {
+		if (indexTask < tasks.tasks.length) {
+			dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
+			if (!isBreak) {
+				if (activeTask) {
+					const mainIntervalId = setInterval(() => {
+						dispatch((dispatch, getState) => {
+							const { activeTask } = getState().tasks
+							console.log(activeTask!.taskTime)
+							console.log(activeTask!.countPomidor)
+							if (activeTask) {
+								if (activeTask.taskTime > 0) {
+									dispatch(taskActions.tickTimerTask())
+								} else {
+									if (activeTask.taskTime === 0 && activeTask.countPomidor === 1) {
+										console.log('старт следующей задачи')
+										clearInterval(mainIntervalId);
+										setIndexTask(indexTask + 1)
+									} else if (activeTask.taskTime === 0 && activeTask.countPomidor != 1) {
+										console.log('старт следующей помидорки дял задачи')
+										dispatch(taskActions.tickPomidorTask(activeTask.id))
+										clearInterval(mainIntervalId);
+									}
+									setIsBreak(true);
+									setCountSession(prevCount => prevCount + 1);
+									startTimer()
+								}
+							}
+						})
+					}, 1000)
+				}
+			} else {
+				const isbreakId = setInterval(() => {
+					if (countSession === 4) {
+						console.log('начался длинный перерыв')
+						setTimeBreakLong(prev => {
+							if (prev === 0) {
+								clearInterval(isbreakId)
+								setTimeBreakLong(10)
+								setIsBreak(false)
+							}
+							return prev - 1
+						})
+					} else {
+						console.log('начался короткий перерыв')
+						setTimeBreakShort(prev => {
+							if (prev === 0) {
+								clearInterval(isbreakId)
+								setTimeBreakShort(5)
+								setIsBreak(false)
+							}
+							return prev - 1
+						})
+
+					}
+				}, 1000)
+				startTimer()
+			}
+		}
+	}, [isBreak, startTimerApp])
 
 
 	///Что будет после первого запуска приложения
 	useEffect(() => {
-		if(tasks.tasks.length != 0) {
+		if (tasks.tasks.length != 0 && !activeTask) {
+			console.log('вставка активной задачи c useEffect')
 			dispatch(taskActions.setActiveTask(tasks.tasks[0].id))
 		}
-	}, [])	
+	}, [])
 
 
 	return (
@@ -99,7 +163,7 @@ const MainPage = () => {
 					<>
 						<Button
 							className={classNames(cls.timerButtonStart, {})}
-							onClick={() => startTimer(indexTask)}
+							onClick={() => startTimer()}
 						>
 							Старт
 						</Button>
@@ -120,93 +184,3 @@ const MainPage = () => {
 }
 
 export default MainPage
-
-
-	// const startTimer = (indexTask: number) => {
-	// 	console.log(indexTask)
-	// 	if (indexTask < tasks.tasks.length) {
-	// 		dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
-	// 		const id = setInterval(() => {
-	// 			const activeTaskTime = selectActiveTaskTime(
-	// 				store.getState()
-	// 			)
-	// 			const activeTaskCountPomidor = selectActiveTaskСountPomidor(
-	// 				store.getState()
-	// 			)
-	// 			const activeTask = selectActiveTask(store.getState())
-	// 			if (activeTaskTime == 0 && activeTaskCountPomidor == 1) {
-	// 				console.log('следующая задача')
-	// 				setNextTask(true)
-	// 				clearInterval(id)
-	// 			} else {
-	// 				if (
-	// 					activeTaskTime == 0 &&
-	// 					activeTaskCountPomidor != 1
-	// 				) {
-	// 					console.log(
-	// 						'повтор помидорки',
-	// 						activeTaskCountPomidor
-	// 					)
-	// 					dispatch(
-	// 						taskActions.tickPomidorTask(activeTask!.id)
-	// 					)
-
-	// 					setNextPomidorTask(true)
-	// 					clearInterval(id)
-	// 				}
-	// 			}
-	// 			dispatch(taskActions.tickTimerTask())
-	// 		}, 1000)
-	// 	} else {
-	// 		console.log('Все задачи завершены')
-	// 		setIndexTask(0)
-	// 	}
-	// }
-
-
-	// const startTimer = (indexTask: number) => {
-	// 	console.log(indexTask)
-	// 	if (indexTask < tasks.tasks.length) {
-	// 		dispatch(taskActions.setActiveTask(tasks.tasks[indexTask].id))
-	// 		const id = setInterval(() => {
-	// 			const activeTaskTime = selectActiveTaskTime(
-	// 				store.getState()
-	// 			)
-	// 			const activeTaskCountPomidor = selectActiveTaskСountPomidor(
-	// 				store.getState()
-	// 			)
-	// 			const activeTask = selectActiveTask(store.getState())
-
-	// 			if()
-
-	// 			dispatch(taskActions.tickTimerTask())
-	// 		}, 1000)
-	// 	} else {
-	// 		console.log('Все задачи завершены')
-	// 		setIndexTask(0)
-	// 	}
-	// }
-	
-	// useEffect(() => {
-
-	// }, [])
-
-	// useEffect(() => {
-	// 	if (nextPomidorTask) {
-	// 		console.log('запустилcя слудующий помидор задачи')
-	// 		startTimer(indexTask)
-	// 		setNextPomidorTask(false)
-	// 	}
-	// }, [nextPomidorTask])
-
-	// useEffect(() => {
-	// 	if (nextTask) {
-	// 		setIndexTask(prev => {
-	// 			const newIndex = prev + 1;
-	// 			console.log('индекс новой задачи', newIndex);
-	// 			startTimer(newIndex);
-	// 			return newIndex;
-	// 		});
-	// 		setNextTask(false);
-	// 	}
-	// }, [nextTask]);

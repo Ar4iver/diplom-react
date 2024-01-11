@@ -10,9 +10,7 @@ export interface TaskSchema {
 
 export type TasksState = {
 	tasks: TaskSchema[]
-	activeTaskId: TaskSchema | null
-	breakTimeShort: number
-	breakTimeLong: number
+	activeTask: TaskSchema | null
 }
 
 export type TaskId = TaskSchema['id']

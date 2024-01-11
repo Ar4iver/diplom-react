@@ -12,9 +12,7 @@ import { TaskId, TaskSchema, TaskSummary, TasksState } from '../types/task'
 
 const initialState: TasksState = {
 	tasks: loadTasks(),
-	activeTaskId: null,
-	breakTimeShort: 5,
-	breakTimeLong: 10,
+	activeTask: null,
 }
 
 export const taskSlice = createSlice({
@@ -39,13 +37,16 @@ export const taskSlice = createSlice({
 			const task = state.tasks.find((item) => item.id === action.payload)
 
 			if (task) {
-				state.activeTaskId = task
+				state.activeTask = task
 			}
 		},
 		setActiveTaskTime: (state, action: PayloadAction<number>) => {
-			if (state.activeTaskId) {
-				state.activeTaskId.taskTime = action.payload
+			if (state.activeTask) {
+				state.activeTask.taskTime = action.payload
 			}
+		},
+		delActiveTask: (state) => {
+			state.activeTask = null
 		},
 		removeTask: (state, action: PayloadAction<string>) => {
 			state.tasks = state.tasks.filter(
@@ -86,7 +87,7 @@ export const taskSlice = createSlice({
 			}
 		},
 		tickTimerTask: (state) => {
-			const activeTask = state.activeTaskId
+			const activeTask = state.activeTask
 
 			if (activeTask && activeTask.taskTime != 0) {
 				activeTask.taskTime -= 1
@@ -97,7 +98,7 @@ export const taskSlice = createSlice({
 		tickPomidorTask: (state, action: PayloadAction<TaskId>) => {
 			const task = state.tasks.find((item) => item.id === action.payload)
 
-			const activeTask = state.activeTaskId
+			const activeTask = state.activeTask
 
 			if (task && activeTask && activeTask.countPomidor != 1) {
 				task.countPomidor -= 1
@@ -105,15 +106,6 @@ export const taskSlice = createSlice({
 			}
 
 			saveTasks(state.tasks)
-		},
-		tickBreakTime: (state, action: PayloadAction<number>) => {
-			const timeDuration = action.payload
-
-			if (timeDuration === 10) {
-				state.breakTimeLong -= 1
-			} else if (timeDuration === 5) {
-				state.breakTimeShort -= 1
-			}
 		},
 	},
 })
