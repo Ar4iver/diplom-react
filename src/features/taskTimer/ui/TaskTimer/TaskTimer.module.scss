@@ -1,0 +1,86 @@
+.timerHeader {
+    display: flex;
+    color: var(--text-color-primary);
+    padding: 19px 40px;
+    background-color: var(--bg-color2);
+    justify-content: space-between;
+    margin-bottom: 70px;
+}
+
+.timerBlock {
+    display: flex;
+    justify-content: center;
+
+    .timer {
+        font: var(--font-big);
+        display: flex;
+        font-family: 'SF UI Display';
+        font-weight: 200;
+    }
+
+    .timerActive {
+        color: var(--secondary-color);
+    }
+}
+
+.taskTimer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.btnTimerAction {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    margin-bottom: 107px;
+}
+
+.iconBtnActionAddTime {
+    position: absolute;
+    top: 49px;
+    right: -67px;
+}
+
+.timerContent {
+    position: relative;
+}
+
+.timerButtonStart {
+    background: var(--btn-color-primary);
+    padding: 15px 50px;
+    color: var(--text-color-primary);
+    border: none;
+}
+
+.timerButtonStopUnactive {
+    padding: 15px 50px;
+    border: 1px solid var(--bg-color2);
+    color: var(--bg-color2);
+    background: none;
+}
+
+.timerButtonStopActive {
+    padding: 15px 50px;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    background: none;
+
+    &:hover {
+        background: var(--secondary-color);
+        color: var(--text-color-primary)
+    }
+}
+
+.timerHeaderActiver {
+    background-color: var(--secondary-color);
+    color: var(--text-color-primary);
+}
+
+.timerActiver {
+    color: var(--secondary-color);
+}
+
+.isBreak {
+    background-color: green;
+}
