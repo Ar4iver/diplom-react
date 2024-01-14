@@ -33,6 +33,9 @@ export const TaskTimer = (props: TaskTimerProps) => {
     const [timebreakShort, setTimeBreakShort] = useState(5)
     const [isBreak, setIsBreak] = useState(false)
 
+    const [formattedTime, setFormattedTime] = useState('00:00');
+    const [isTimerType, setiIsTimerType] = useState('')
+
 
     const startTimer = () => {
         setStartTimerApp(true)
@@ -76,13 +79,15 @@ export const TaskTimer = (props: TaskTimerProps) => {
                     }
                 } else {
                     const isbreakId = setInterval(() => {
+                        setIsTimeRun(false)
                         if (countSession === 4) {
                             console.log('начался длинный перерыв')
                             setTimeBreakLong(prev => {
                                 if (prev === 0) {
                                     clearInterval(isbreakId)
                                     setTimeBreakLong(10)
-                                    setIsTimeRun(false)
+                                    setiIsTimerType('long')
+                                    setIsTimeRun(true)
                                     setIsBreak(false)
                                 }
                                 return prev - 1
@@ -93,7 +98,8 @@ export const TaskTimer = (props: TaskTimerProps) => {
                                 if (prev === 0) {
                                     clearInterval(isbreakId)
                                     setTimeBreakShort(5)
-                                    setIsTimeRun(false)
+                                    setiIsTimerType('short')
+                                    setIsTimeRun(true)
                                     setIsBreak(false)
                                 }
                                 return prev - 1
@@ -101,8 +107,6 @@ export const TaskTimer = (props: TaskTimerProps) => {
 
                         }
                     }, 1000)
-                    startTimer()
-                    setIsTimeRun(true)
                 }
             } else {
                 console.log('Всё')
@@ -121,19 +125,28 @@ export const TaskTimer = (props: TaskTimerProps) => {
         }
     }, [])
 
+
+    ///Установка времени
+    useEffect(() => {
+        if (isBreak) {
+            console.log(isTimerType)
+            const timerType = isTimerType === 'long' ? timebreakLong : timebreakShort;
+            setFormattedTime(formatTime(timerType, 'timer'));
+        }
+    }, [isBreak, isTimeRun, isTimerType])
+
+
     return (
         <div className={classNames(cls.TaskTimer, {}, [className])}>
             {/* ///???????????????????????????? */}
-            <div className={classNames(cls.timerHeader, { [cls.timerHeaderActiver]: startTimerApp, [cls.isBreak]: !isBreak })}>
+            <div className={classNames(cls.timerHeader, { [cls.timerHeaderActiver]: isTimeRun, [cls.isBreak]: isBreak })}>
                 <div>{activeTask?.taskSummary}</div>
                 <div>Помидор {activeTask?.countPomidor}</div>
             </div>
             <div className={cls.timerBlock}>
                 <span className={cls.timerContent}>
-                    <span className={classNames(cls.timer, { [cls.timerActiver]: isTimeRun })}>
-                        {activeTask?.taskTime
-                            ? formatTime(activeTask?.taskTime, 'timer')
-                            : '00:00'}
+                    <span className={classNames(cls.timer, {})}>
+                        {isTimeRun ? formatTime(activeTask!.taskTime, 'timer') : formattedTime}
                     </span>
                     <span className={cls.iconBtnActionAddTime}>
                         <AddTimeBigAction />
