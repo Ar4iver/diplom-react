@@ -34,7 +34,7 @@ export const TaskTimer = (props: TaskTimerProps) => {
     const [isBreak, setIsBreak] = useState(false)
 
     const [formattedTime, setFormattedTime] = useState('00:00');
-    const [isTimerType, setiIsTimerType] = useState('')
+    const [isTimerType, setiIsTimerType] = useState('short')
 
 
     const startTimer = () => {
@@ -53,8 +53,6 @@ export const TaskTimer = (props: TaskTimerProps) => {
                         const mainIntervalId = setInterval(() => {
                             dispatch((dispatch, getState) => {
                                 const { activeTask } = getState().tasks
-                                console.log(activeTask!.taskTime)
-                                console.log(activeTask!.countPomidor)
                                 if (activeTask) {
                                     if (activeTask.taskTime > 0) {
                                         dispatch(taskActions.tickTimerTask())
@@ -80,13 +78,14 @@ export const TaskTimer = (props: TaskTimerProps) => {
                 } else {
                     const isbreakId = setInterval(() => {
                         setIsTimeRun(false)
+                        console.log(countSession, 'это какая сессия')
                         if (countSession === 4) {
                             console.log('начался длинный перерыв')
                             setTimeBreakLong(prev => {
+                                console.log(prev)
                                 if (prev === 0) {
                                     clearInterval(isbreakId)
-                                    setTimeBreakLong(10)
-                                    setiIsTimerType('long')
+                                    setCountSession(1)
                                     setIsTimeRun(true)
                                     setIsBreak(false)
                                 }
@@ -95,10 +94,9 @@ export const TaskTimer = (props: TaskTimerProps) => {
                         } else {
                             console.log('начался короткий перерыв')
                             setTimeBreakShort(prev => {
+                                console.log(prev, 'это время на короткий перерыв')
                                 if (prev === 0) {
                                     clearInterval(isbreakId)
-                                    setTimeBreakShort(5)
-                                    setiIsTimerType('short')
                                     setIsTimeRun(true)
                                     setIsBreak(false)
                                 }
@@ -107,6 +105,8 @@ export const TaskTimer = (props: TaskTimerProps) => {
 
                         }
                     }, 1000)
+                    setTimeBreakLong(10)
+                    setTimeBreakShort(5)
                 }
             } else {
                 console.log('Всё')
@@ -126,14 +126,17 @@ export const TaskTimer = (props: TaskTimerProps) => {
     }, [])
 
 
-    ///Установка времени
     useEffect(() => {
-        if (isBreak) {
-            console.log(isTimerType)
-            const timerType = isTimerType === 'long' ? timebreakLong : timebreakShort;
-            setFormattedTime(formatTime(timerType, 'timer'));
+        if (isBreak && !isTimeRun) {
+            setFormattedTime(formatTime(timebreakLong, 'timer'));
         }
-    }, [isBreak, isTimeRun, isTimerType])
+    }, [isBreak, timebreakLong, isTimeRun])
+
+    useEffect(() => {
+        if (isBreak && !isTimeRun) {
+            setFormattedTime(formatTime(timebreakShort, 'timer'));
+        }
+    }, [isBreak, timebreakShort, isTimeRun])
 
 
     return (
@@ -146,7 +149,7 @@ export const TaskTimer = (props: TaskTimerProps) => {
             <div className={cls.timerBlock}>
                 <span className={cls.timerContent}>
                     <span className={classNames(cls.timer, {})}>
-                        {isTimeRun ? formatTime(activeTask!.taskTime, 'timer') : formattedTime}
+                        {isTimeRun ? formatTime(2, 'timer') : formattedTime}
                     </span>
                     <span className={cls.iconBtnActionAddTime}>
                         <AddTimeBigAction />
