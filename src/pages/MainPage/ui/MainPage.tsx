@@ -1,6 +1,5 @@
 import React from 'react'
 import cls from './MainPage.module.scss'
-import { formatTime } from 'shared/lib/helpers/formatTime'
 import { TodoList } from 'entities/Task'
 import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
@@ -8,7 +7,9 @@ import { TodoForm } from 'features/taskForm'
 import { TaskTimer } from 'features/taskTimer'
 
 const MainPage = () => {
-	const tasks = useSelector((state: StateSchema) => state.tasks)
+	const tasks = useSelector(
+		(state: StateSchema) => state.createTaskformSlice.tasks
+	)
 	return (
 		<section className={cls.section__app}>
 			<div className={cls.leftContent}>
@@ -34,9 +35,7 @@ const MainPage = () => {
 					<div className={cls.todoList}>
 						<TodoList tasks={tasks} />
 					</div>
-					<span>
-						суммарное время всех задач
-					</span>
+					<span>суммарное время всех задач</span>
 				</div>
 			</div>
 			<div className={cls.rightContent}>

@@ -5,15 +5,14 @@ import EditButtonTodo from 'shared/assets/icons/edit_icon.svg'
 import DeleteButtonTodo from 'shared/assets/icons/delete_icon.svg'
 import ButtonActionDropdown from 'shared/assets/icons/btn-action-dpd-todo.svg'
 import { Dropdown } from 'shared/ui/Dropdowm/Dropdown'
-import { TaskId, TaskSummary } from 'entities/Task/model/types/task'
 
 interface TaskActionsProps {
-	onIncrement?: (id: TaskId) => void
-	onDecrement?: (id: TaskId) => void
-	onEdit?: (id: TaskId, taskSummary: TaskSummary) => void
-	onRemove?: (id: TaskId) => void
-	id: TaskId
-	taskSummary: TaskSummary
+	onIncrement?: (id: string) => void
+	onDecrement?: (id: string) => void
+	onEdit?: (id: string, taskSummary: string) => void
+	onRemove?: (id: string) => void
+	id: string
+	taskSummary: string
 }
 
 export const TaskDropdownActions = (props: TaskActionsProps) => {

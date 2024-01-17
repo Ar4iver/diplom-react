@@ -1,96 +1,44 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoItem.module.scss'
-import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { taskActions } from 'entities/Task/model/slice/taskSlice'
-import {
-	CountPomidor,
-	TaskId,
-	TaskSummary,
-} from 'entities/Task/model/types/task'
-import { Input } from 'shared/ui/Input/Input'
-import { Button } from 'shared/ui/Button/Button'
-import { useSelector } from 'react-redux'
-import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
-import { formActions } from 'features/taskForm'
 import { TaskDropdownActions } from './TaskActions'
+import { formActions } from 'features/taskForm'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 
-/**TypeScript Utility Types - полчаем тип непосредственно из структуры */
+/**TypeScript Utility Types - получаем тип непосредственно из структуры */
 interface TodoItemProps {
 	className?: string
-	id: TaskId
-	taskSummary: TaskSummary
-	countPomidor: CountPomidor
+	id: string
+	taskSummary: string
+	countPomidor: number
 }
 
 export const TodoItem = (props: TodoItemProps) => {
+	const dispatch = useAppDispatch()
 	const { className, id, taskSummary, countPomidor } = props
 
-	const [edit, setEdit] = useState(false)
-
-	const openEdit = () => {
-		setEdit(true)
+	const handleIncrementPomidorTask = (id: string) => {
+		dispatch(formActions.incrementTaskPomidor(id))
 	}
 
-	const dispatch = useAppDispatch()
-
-	const editTaskText = useSelector(
-		(state: StateSchema) => state.form.taskSummaryEditInput
-	)
-
-	const handleRemoveTask = (id: TaskId) => {
-		dispatch(taskActions.removeTask(id))
-	}
-
-	const handleIncrementPomidorTask = (id: TaskId) => {
-		dispatch(taskActions.incrementTaskPomidor(id))
-	}
-
-	const handleDecrementPomidorTask = (id: TaskId) => {
-		dispatch(taskActions.decrementTaskPomidor(id))
-	}
-
-	const handleEditTask = (id: TaskId, taskSummary: TaskSummary) => {
-		dispatch(taskActions.editTask({ id, taskSummary }))
-		setEdit(false)
-	}
-
-	const onChangeEditTask = (value: string) => {
-		dispatch(formActions.setTaskEditInput(value))
+	const handleDecrementPomidorTask = (id: string) => {
+		dispatch(formActions.decrementTaskPomidor(id))
 	}
 
 	return (
 		<div className={classNames(cls.TodoItem, {}, [className])}>
 			<div className={cls.contentTodo}>
 				<div className={cls.circle}>{countPomidor}</div>
-				{edit ? (
-					<>
-						<Input
-							onChange={onChangeEditTask}
-							type="text"
-							value={editTaskText}
-						/>
-						<Button
-							onClick={() => handleEditTask(id, editTaskText)}
-						>
-							✓
-						</Button>
-						<Button onClick={() => setEdit(false)}>✗</Button>
-					</>
-				) : (
-					<>
-						<div>{taskSummary}</div>
-					</>
-				)}
+				<>
+					<div>{taskSummary}</div>
+				</>
 			</div>
 			<div className={cls.actionBtn}>
 				<TaskDropdownActions
-					id={id}
-					taskSummary={taskSummary}
 					onIncrement={handleIncrementPomidorTask}
 					onDecrement={handleDecrementPomidorTask}
-					onEdit={openEdit}
-					onRemove={handleRemoveTask}
+					id={id}
+					taskSummary={taskSummary}
 				/>
 			</div>
 		</div>

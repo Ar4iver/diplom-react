@@ -3,11 +3,10 @@ import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoForm.module.scss'
 import { Button, ThemeButton } from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
-import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 import { useSelector } from 'react-redux'
-import { taskActions } from 'entities/Task'
-import { formActions } from 'features/taskForm/model/slice/formSlice'
 import { getAddTaskFormText } from 'features/taskForm/model/selectors/selectFormState/taskForm'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
+import { formActions } from 'features/taskForm/model/slice/createTaskformSlice'
 
 interface TodoFormProps {
 	className?: string
@@ -24,7 +23,6 @@ interface TodoFormProps {
 // eslint-disable-next-line react/display-name
 export const TodoForm = memo(({ className }: TodoFormProps) => {
 	const dispatch = useAppDispatch()
-
 	const taskSummary = useSelector(getAddTaskFormText)
 
 	const onChangeTask = useCallback(
@@ -35,7 +33,7 @@ export const TodoForm = memo(({ className }: TodoFormProps) => {
 	)
 
 	const addTask = useCallback(() => {
-		dispatch(taskActions.addTaskToList(taskSummary))
+		dispatch(formActions.addTask(taskSummary))
 	}, [dispatch, taskSummary])
 
 	return (
@@ -47,9 +45,9 @@ export const TodoForm = memo(({ className }: TodoFormProps) => {
 		>
 			<Input
 				onChange={onChangeTask}
+				value={taskSummary}
 				type="text"
 				placeholder="Название задачи"
-				value={taskSummary}
 			/>
 			<Button onClick={addTask} theme={ThemeButton.PRIMARY}>
 				Добавить
