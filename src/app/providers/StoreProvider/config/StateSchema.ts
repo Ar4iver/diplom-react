@@ -1,5 +1,5 @@
-import { CreateTaskFormState } from 'features/taskForm/model/types/form'
+import { CreateTaskFormState } from 'features/actions-task/model/types/actions-task-types'
 
 export interface StateSchema {
-	createTaskformSlice: CreateTaskFormState
+	actionsTaskSlice: CreateTaskFormState
 }

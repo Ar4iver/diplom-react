@@ -2,7 +2,7 @@ import { ReducersMapObject, configureStore } from '@reduxjs/toolkit'
 import { StateSchema } from './StateSchema'
 import thunk from 'redux-thunk'
 import { useDispatch } from 'react-redux'
-import { formReducer } from 'features/taskForm'
+import { actionsTaskReducer } from 'features/actions-task/model/slice/actions-task'
 
 /***
  * ReducersMapObject - позволяет структурировать и обьединять множество редьюсеров
@@ -13,7 +13,7 @@ import { formReducer } from 'features/taskForm'
 
 export function createReduxStore(initialState?: StateSchema) {
 	const rootReducers: ReducersMapObject<StateSchema> = {
-		createTaskformSlice: formReducer,
+		actionsTaskSlice: actionsTaskReducer,
 	}
 
 	return configureStore<StateSchema>({

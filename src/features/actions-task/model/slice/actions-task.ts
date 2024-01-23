@@ -1,16 +1,17 @@
-import { v4 as uuidv4 } from 'uuid'
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { CreateTaskFormState, TaskSchema } from '../types/form'
-import { saveTasks } from 'shared/lib/helpers/saveTasks'
 import { loadTasks } from 'shared/lib/helpers/loadTasks'
+import { CreateTaskFormState } from '../types/actions-task-types'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { saveTasks } from 'shared/lib/helpers/saveTasks'
+import { v4 as uuidv4 } from 'uuid'
+import { TaskSchema } from 'entities/Task/types/task'
 
 const initialState: CreateTaskFormState = {
 	tasks: loadTasks(),
 	taskSummaryInput: '',
 }
 
-export const createTaskformSlice = createSlice({
-	name: 'form',
+export const actionsTaskSlice = createSlice({
+	name: 'actionsTask',
 	initialState,
 	reducers: {
 		setTaskTextInput: (state, action: PayloadAction<string>) => {
@@ -46,8 +47,15 @@ export const createTaskformSlice = createSlice({
 
 			saveTasks(state.tasks)
 		},
+		removeTask: (state, action: PayloadAction<string>) => {
+			state.tasks = state.tasks.filter(
+				(task) => task.id !== action.payload
+			)
+
+			saveTasks(state.tasks)
+		},
 	},
 })
 
-export const { actions: formActions } = createTaskformSlice
-export const { reducer: formReducer } = createTaskformSlice
+export const { actions: actionsTaskActions } = actionsTaskSlice
+export const { reducer: actionsTaskReducer } = actionsTaskSlice

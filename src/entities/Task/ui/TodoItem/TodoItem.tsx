@@ -2,8 +2,8 @@ import React from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoItem.module.scss'
 import { TaskDropdownActions } from './TaskActions'
-import { formActions } from 'features/taskForm'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
+import { actionsTaskActions } from 'features/actions-task/model/slice/actions-task'
 
 /**TypeScript Utility Types - получаем тип непосредственно из структуры */
 interface TodoItemProps {
@@ -18,11 +18,15 @@ export const TodoItem = (props: TodoItemProps) => {
 	const { className, id, taskSummary, countPomidor } = props
 
 	const handleIncrementPomidorTask = (id: string) => {
-		dispatch(formActions.incrementTaskPomidor(id))
+		dispatch(actionsTaskActions.incrementTaskPomidor(id))
 	}
 
 	const handleDecrementPomidorTask = (id: string) => {
-		dispatch(formActions.decrementTaskPomidor(id))
+		dispatch(actionsTaskActions.decrementTaskPomidor(id))
+	}
+
+	const handleRemoveTask = (id: string) => {
+		dispatch(actionsTaskActions.removeTask(id))
 	}
 
 	return (
@@ -35,10 +39,11 @@ export const TodoItem = (props: TodoItemProps) => {
 			</div>
 			<div className={cls.actionBtn}>
 				<TaskDropdownActions
-					onIncrement={handleIncrementPomidorTask}
-					onDecrement={handleDecrementPomidorTask}
 					id={id}
 					taskSummary={taskSummary}
+					onRemove={handleRemoveTask}
+					onIncrement={handleIncrementPomidorTask}
+					onDecrement={handleDecrementPomidorTask}
 				/>
 			</div>
 		</div>

@@ -3,12 +3,12 @@ import cls from './MainPage.module.scss'
 import { TodoList } from 'entities/Task'
 import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
-import { TodoForm } from 'features/taskForm'
-import { TaskTimer } from 'features/taskTimer'
+import { TodoForm } from 'pages/MainPage/ui/components/TodoForm/TodoForm'
+import { TaskTimer } from './components/TaskTimer/TaskTimer'
 
 const MainPage = () => {
 	const tasks = useSelector(
-		(state: StateSchema) => state.createTaskformSlice.tasks
+		(state: StateSchema) => state.actionsTaskSlice.tasks
 	)
 	return (
 		<section className={cls.section__app}>

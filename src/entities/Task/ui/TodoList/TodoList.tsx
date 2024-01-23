@@ -2,7 +2,7 @@ import React from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoList.module.scss'
 import { TodoItem } from '../TodoItem/TodoItem'
-import { TaskSchema } from 'features/taskForm/model/types/form'
+import { TaskSchema } from 'entities/Task/types/task'
 
 interface TodoListProps {
 	className?: string
