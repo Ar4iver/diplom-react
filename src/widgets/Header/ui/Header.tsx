@@ -40,6 +40,12 @@ export const Header = ({ className }: HeaderProps) => {
 							</span>
 							<span>Статистика</span>
 						</AppLink>
+						<AppLink
+							to={RoutePath.settings}
+							className={classNames(cls.link)}
+						>
+							<span>Настройки</span>
+						</AppLink>
 					</div>
 				</div>
 			</Container>
