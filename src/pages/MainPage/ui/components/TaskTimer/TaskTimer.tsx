@@ -11,22 +11,34 @@ interface TaskTimerProps {
 
 export const TaskTimer = (props: TaskTimerProps) => {
 	const { className } = props
-	const { workMinutes = 25, shortBreak = 5 } = useContext(SettingsContext)
+
+	const { workMinutes, shortBreak, longBreak } = useContext(SettingsContext)
 
 	const [isPaused, setIsPaused] = useState(false)
-	const [mode, setMode] = useState('work')
+	const [mode, setMode] = useState('break')
 	const [startTimer, setStartTimer] = useState(false)
 	const [secondsLeft, setSecondsLeft] = useState(0)
+	const [sessionCount, setSessionCount] = useState(0)
 
 	const secondsLeftRef = useRef(secondsLeft)
 	const isPausedRef = useRef(isPaused)
 	const modeRef = useRef(mode)
+	const sessionCountRef = useRef(sessionCount)
 
 	const switchMode = () => {
-		const nextMode = modeRef.current === 'work' ? 'break' : 'work'
+		const nextMode =
+			modeRef.current === 'work'
+				? sessionCountRef.current === 4
+					? 'longBreak'
+					: 'break'
+				: 'work'
 
 		const nextSeconds =
-			(nextMode === 'work' ? workMinutes : shortBreak) * 60
+			(nextMode === 'work'
+				? workMinutes!
+				: nextMode === 'longBreak'
+				? longBreak!
+				: shortBreak!) * 60
 
 		setMode(nextMode)
 		modeRef.current = nextMode
@@ -35,12 +47,18 @@ export const TaskTimer = (props: TaskTimerProps) => {
 	}
 
 	const initTimer = () => {
-		setSecondsLeft(workMinutes * 60)
+		setSecondsLeft(workMinutes! * 60)
 	}
 
 	const tick = () => {
 		secondsLeftRef.current--
 		setSecondsLeft(secondsLeftRef.current)
+	}
+
+	const tickSessionCount = () => {
+		sessionCountRef.current++
+		setSessionCount(sessionCountRef.current)
+		console.log(sessionCountRef.current)
 	}
 
 	const minutes = Math.floor(secondsLeft / 60)
@@ -61,6 +79,7 @@ export const TaskTimer = (props: TaskTimerProps) => {
 			}
 			if (secondsLeftRef.current === 0) {
 				console.log('свитч мод')
+				tickSessionCount()
 				return switchMode()
 			}
 			tick()
@@ -93,6 +112,7 @@ export const TaskTimer = (props: TaskTimerProps) => {
 					<>
 						<Button
 							className={classNames(cls.timerButtonContinue, {})}
+							onClick={() => setIsPaused(false)}
 						>
 							Продолжить
 						</Button>

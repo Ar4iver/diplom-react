@@ -8,9 +8,9 @@ import SettingsContext from './providers/context/SettingsContext'
 
 const App = () => {
 	const { theme } = useTheme()
-	const [workMinutes, setWorkMinutes] = useState(25)
-	const [shortBreak, setShortBreak] = useState(5)
-	const [longBreak, setLongBreak] = useState(10)
+	const [workMinutes, setWorkMinutes] = useState(7)
+	const [shortBreak, setShortBreak] = useState(3)
+	const [longBreak, setLongBreak] = useState(60)
 
 	return (
 		<div className={classNames('app', {}, [theme])}>

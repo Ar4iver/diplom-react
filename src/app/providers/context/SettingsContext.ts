@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
 
-interface SettingsContextType {
+export interface SettingsContextType {
 	workMinutes: number
 	setWorkMinutes: Dispatch<SetStateAction<number>>
 	shortBreak: number
