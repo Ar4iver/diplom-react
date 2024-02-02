@@ -39,7 +39,7 @@ const MainPage = () => {
 				</div>
 			</div>
 			<div className={cls.rightContent}>
-				<TaskTimer />
+				<TaskTimer tasks={tasks} />
 			</div>
 		</section>
 	)

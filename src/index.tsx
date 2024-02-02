@@ -6,6 +6,7 @@ import App from './app/App'
 import { ThemeProvider } from './app/providers/ThemeProvider'
 import { ErrorBoundary } from 'app/providers/ErrorBoundary'
 import { StoreProvider } from 'app/providers/StoreProvider'
+import { SettingsProvider } from 'app/providers/SettingsProvider'
 
 const container = document.getElementById('root')
 
@@ -20,7 +21,9 @@ root.render(
 		<BrowserRouter>
 			<ErrorBoundary>
 				<ThemeProvider>
-					<App />
+					<SettingsProvider>
+						<App />
+					</SettingsProvider>
 				</ThemeProvider>
 			</ErrorBoundary>
 		</BrowserRouter>

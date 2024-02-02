@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useContext } from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './SettingsPage.module.scss'
-import SettingsContext from 'app/providers/context/SettingsContext'
+import SettingsContext from 'shared/lib/settings/SettingsContext'
 
 interface SettingsPageProps {
 	className?: string
