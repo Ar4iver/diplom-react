@@ -60,7 +60,8 @@
     background: none;
 }
 
-.timerButtonStopActive {
+.timerButtonStopActive,
+.timerButtonDone {
     padding: 15px 50px;
     border: 1px solid var(--secondary-color);
     color: var(--secondary-color);
@@ -78,6 +79,7 @@
 }
 
 .timerHeaderBreak,
+.timerHeaderPaused,
 .timerHeaderLongBreak {
     background-color: var(--bg-color3);
     color: var(--text-color-primary);
@@ -87,6 +89,7 @@
     color: var(--secondary-color);
 }
 
+.timerPaused,
 .timerBreak,
 .timerLongBreak {
     color: var(--bg-color3);

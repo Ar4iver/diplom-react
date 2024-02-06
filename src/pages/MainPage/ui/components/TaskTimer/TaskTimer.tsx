@@ -22,16 +22,26 @@ export const TaskTimer = (props: TaskTimerProps) => {
 
 	const dispatch = useAppDispatch()
 
-	const [isPaused, setIsPaused] = useState(false)
 	const [mode, setMode] = useState('')
 	const [startTimer, setStartTimer] = useState(false)
 	const [secondsLeft, setSecondsLeft] = useState(0)
 	const [sessionCount, setSessionCount] = useState(0)
+	const [pomidorCount, setPomidorCount] = useState(0)
+	const [stop, setStop] = useState(false)
+	const [isPaused, setIsPaused] = useState(false)
 
 	let queueTaskIndex: number = 0
 	const [activerTask, setActiveTask] = useState(
 		tasks.length != 0 ? tasks[queueTaskIndex] : null
 	)
+
+	///******* Как обновлять значение из useSelect и в интервале использовать актуальное значение из Redux */
+
+	/**
+	 * 1) Получаем через useSelect значение
+	 * 2) Делаем состояние useState, передаём в начальное значение наше из useSelect
+	 * 3) Через useEffect обновляем значение используя set-функцию.
+	 */
 
 	const countPomidorActiveTask = useSelector(
 		(store: StateSchema) =>
@@ -42,10 +52,18 @@ export const TaskTimer = (props: TaskTimerProps) => {
 		countPomidorActiveTask ? countPomidorActiveTask : 0
 	)
 
+	useEffect(() => {
+		setCountPomidorSelect(
+			countPomidorActiveTask ? countPomidorActiveTask : 0
+		)
+	}, [countPomidorActiveTask])
+
+	///******************************************************************************************************/
+
 	const secondsLeftRef = useRef(secondsLeft)
-	const isPausedRef = useRef(isPaused)
 	const modeRef = useRef(mode)
 	const sessionCountRef = useRef(sessionCount)
+	const isPausedRef = useRef(isPaused)
 
 	const switchMode = () => {
 		const nextMode =
@@ -71,14 +89,21 @@ export const TaskTimer = (props: TaskTimerProps) => {
 		secondsLeftRef.current = nextSeconds
 	}
 
+	const stopTimer = () => {
+		setMode('stop')
+		modeRef.current = 'stop'
+	}
+
 	const addTimeTask = () => {
 		if (mode === '' || mode === 'work') {
-			console.log('work на добавление')
 			secondsLeftRef.current = secondsLeftRef.current + 60
 		}
 	}
 
 	const initTimer = () => {
+		if (stop && workMinutes) {
+			secondsLeftRef.current = workMinutes * 60
+		}
 		setSecondsLeft(workMinutes! * 60)
 		if (tasks.length === 0) {
 			return
@@ -92,30 +117,27 @@ export const TaskTimer = (props: TaskTimerProps) => {
 		setCountPomidorSelect((prevCount) => prevCount - 1)
 	}
 
-	useEffect(() => {
-		setCountPomidorSelect(countPomidorActiveTask)
-	}, [countPomidorActiveTask])
-
 	const tick = () => {
 		secondsLeftRef.current--
 		setSecondsLeft(secondsLeftRef.current)
 
 		if (modeRef.current === 'work' && secondsLeftRef.current === 0) {
 			tickPomidorCount()
-			if (countPomidorSelect <= 1) {
-				dispatch(
-					actionsTaskActions.removeTask(tasks[queueTaskIndex].id)
-				)
-				queueTaskIndex++
-				setActiveTask(tasks[queueTaskIndex])
-			}
+			checkPomidorSession()
 		}
 	}
 
 	const tickSessionCount = () => {
 		sessionCountRef.current++
 		setSessionCount(sessionCountRef.current)
-		console.log(sessionCountRef.current)
+	}
+
+	const taskDoneAction = (id: string) => {
+		dispatch(actionsTaskActions.removeTask(id))
+	}
+
+	const checkPomidorSession = () => {
+		setPomidorCount((prev) => prev + 1)
 	}
 
 	const minutes = Math.floor(secondsLeft / 60)
@@ -124,7 +146,7 @@ export const TaskTimer = (props: TaskTimerProps) => {
 
 	useEffect(() => {
 		initTimer()
-	}, [activerTask, tasks, workMinutes])
+	}, [activerTask, tasks.length, workMinutes, stop])
 
 	useEffect(() => {
 		if (!startTimer) {
@@ -135,7 +157,8 @@ export const TaskTimer = (props: TaskTimerProps) => {
 		}
 
 		if (tasks.length === 0) {
-			setMode('')
+			setMode('stop')
+			modeRef.current = 'stop'
 			setStartTimer(false)
 			return
 		}
@@ -146,36 +169,55 @@ export const TaskTimer = (props: TaskTimerProps) => {
 			}
 			if (secondsLeftRef.current === 0) {
 				if (modeRef.current === 'work') {
-					console.log('Изменил каунт сессии')
 					tickSessionCount()
 				}
-				console.log('свитч мод')
+				if (countPomidorSelect === 0) {
+					dispatch(
+						actionsTaskActions.removeTask(tasks[queueTaskIndex].id)
+					)
+					queueTaskIndex++
+					setActiveTask(tasks[queueTaskIndex])
+					setPomidorCount(0)
+				}
 				return switchMode()
 			}
 			tick()
 		}, 10)
 
 		return () => clearInterval(intevalId)
-	}, [startTimer, isPaused, tasks.length])
+	}, [startTimer, isPaused, tasks.length, countPomidorSelect, stop])
 
 	return (
 		<div className={classNames(cls.TaskTimer, {}, [className])}>
 			<div
 				className={classNames(cls.timerHeader, {
+					[cls.timerHeader]: mode === 'stop',
 					[cls.timerHeaderWork]: mode === 'work',
 					[cls.timerHeaderBreak]: mode === 'break',
+					[cls.timerHeaderPaused]: mode === 'paused',
 					[cls.timerHeaderLongBreak]: mode === 'longBreak',
 				})}
 			>
-				<div>Количество помидорок</div>
-				<div>Помидор</div>
+				{tasks.length ? (
+					<>
+						<div>{activerTask?.taskSummary}</div>
+						<div>Помидоров прошло: {pomidorCount}</div>
+					</>
+				) : (
+					''
+				)}
 			</div>
-			<div className={cls.timerBlock}>
+			<div
+				className={cls.timerBlock}
+				onClick={() => console.log(modeRef.current)}
+			>
 				<span className={cls.timerContent}>
 					<span
 						className={classNames(cls.timer, {
+							[cls.timer]: mode === 'stop',
 							[cls.timerWork]: mode === 'work',
 							[cls.timerBreak]: mode === 'break',
+							[cls.timerPaused]: mode === 'paused',
 							[cls.timerLongBreak]: mode === 'longBreak',
 						})}
 					>
@@ -190,10 +232,14 @@ export const TaskTimer = (props: TaskTimerProps) => {
 				</span>
 			</div>
 			<div className={cls.taskTimer}>
-				Задача (порядковый номер в списке) -{' '}
-				{activerTask && tasks.length
-					? activerTask.taskSummary
-					: 'Задачи не найдены'}
+				{activerTask && tasks.length ? (
+					<>
+						Задача {activerTask?.serialNumber} -{' '}
+						{activerTask?.taskSummary}
+					</>
+				) : (
+					'Здесь будет название активной задачи'
+				)}
 			</div>
 			<div className={cls.btnTimerAction}>
 				{startTimer ? (
@@ -207,7 +253,18 @@ export const TaskTimer = (props: TaskTimerProps) => {
 						>
 							Пауза
 						</Button>
-						<Button className={classNames(cls.timerButtonSkip, {})}>
+						<Button
+							className={classNames(
+								cls.timerButtonStopActive,
+								{}
+							)}
+							onClick={() => {
+								stopTimer()
+								setStartTimer(false)
+								setStop(true)
+								setIsPaused(false)
+							}}
+						>
 							Стоп
 						</Button>
 					</>
@@ -222,18 +279,29 @@ export const TaskTimer = (props: TaskTimerProps) => {
 						>
 							Продолжить
 						</Button>
-						<Button
-							className={classNames(
-								cls.timerButtonStopUnactive,
-								{}
-							)}
-							onClick={() => {
-								setStartTimer(false)
-								setIsPaused(false)
-							}}
-						>
-							Сделано
-						</Button>
+						{modeRef.current === 'break' ||
+						modeRef.current === 'longBreak' ? (
+							<Button
+								className={classNames(cls.timerButtonDone, {})}
+								onClick={() => {
+									switchMode()
+								}}
+							>
+								Пропустить
+							</Button>
+						) : (
+							<Button
+								className={classNames(cls.timerButtonDone, {})}
+								onClick={() => {
+									setStartTimer(false)
+									setIsPaused(false)
+									taskDoneAction(activerTask!.id)
+									stopTimer()
+								}}
+							>
+								Сделано
+							</Button>
+						)}
 					</>
 				) : (
 					<>
@@ -241,6 +309,8 @@ export const TaskTimer = (props: TaskTimerProps) => {
 							disabled={tasks.length === 0}
 							className={classNames(cls.timerButtonStart, {}, [])}
 							onClick={() => {
+								switchMode()
+								setStop(false)
 								setStartTimer(true)
 								setIsPaused(false)
 							}}
@@ -252,7 +322,6 @@ export const TaskTimer = (props: TaskTimerProps) => {
 								cls.timerButtonStopUnactive,
 								{}
 							)}
-							onClick={() => setStartTimer(false)}
 						>
 							Стоп
 						</Button>

@@ -20,6 +20,7 @@ export const actionsTaskSlice = createSlice({
 		addTask: (state, action: PayloadAction<string>) => {
 			const newTask: TaskSchema = {
 				id: uuidv4(),
+				serialNumber: state.tasks.length + 1,
 				taskSummary: action.payload,
 				countPomidor: 1,
 				isCompleted: false,
@@ -41,8 +42,10 @@ export const actionsTaskSlice = createSlice({
 		decrementTaskPomidor: (state, action: PayloadAction<string>) => {
 			const task = state.tasks.find((item) => item.id === action.payload)
 
-			if (task) {
+			if (task && task.countPomidor > 1) {
 				task.countPomidor -= 1
+			} else {
+				return
 			}
 
 			saveTasks(state.tasks)

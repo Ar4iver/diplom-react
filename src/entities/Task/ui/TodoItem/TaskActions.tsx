@@ -19,53 +19,69 @@ export const TaskDropdownActions = (props: TaskActionsProps) => {
 	const { onIncrement, onDecrement, onEdit, onRemove, id, taskSummary } =
 		props
 
+	const handleIncrement = (event: React.MouseEvent) => {
+		event.stopPropagation()
+		if (onIncrement) onIncrement(id)
+	}
+
+	const handleDecrement = (event: React.MouseEvent) => {
+		event.stopPropagation()
+		if (onDecrement) onDecrement(id)
+	}
+
+	const handleEdit = (event: React.MouseEvent) => {
+		event.stopPropagation()
+		if (onEdit) onEdit(id, taskSummary)
+	}
+
+	const handleRemove = (event: React.MouseEvent) => {
+		event.stopPropagation()
+		if (onRemove) onRemove(id)
+	}
+
 	return (
 		<div>
 			<Dropdown
 				items={[
 					{
 						content: (
-							<div>
+							<div onClick={handleIncrement}>
 								<span>
 									<IncrButtontime />
 								</span>
 								<span>Увеличить</span>
 							</div>
 						),
-						onClick: () => onIncrement && onIncrement(id),
 					},
 					{
 						content: (
-							<div>
+							<div onClick={handleDecrement}>
 								<span>
 									<DecrButtontime />
 								</span>
 								<span>Уменьшить</span>
 							</div>
 						),
-						onClick: () => onDecrement && onDecrement(id),
 					},
 					{
 						content: (
-							<div>
+							<div onClick={handleEdit}>
 								<span>
 									<EditButtonTodo />
 								</span>
 								<span>Редактировать</span>
 							</div>
 						),
-						onClick: () => onEdit && onEdit(id, taskSummary),
 					},
 					{
 						content: (
-							<div>
+							<div onClick={handleRemove}>
 								<span>
 									<DeleteButtonTodo />
 								</span>
 								<span>Удалить</span>
 							</div>
 						),
-						onClick: () => onRemove && onRemove(id),
 					},
 				]}
 				trigger={<ButtonActionDropdown />}
