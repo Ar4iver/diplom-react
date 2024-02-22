@@ -1,9 +1,9 @@
 import React from 'react'
 import { NotFoundPage } from 'pages/404Page'
 import { MainPage } from 'pages/MainPage'
-import { StatistiсPage } from 'pages/StatisticPage'
 import { RouteProps } from 'react-router-dom'
 import { SettingsPage } from 'pages/SettingsPage'
+import AnaliticPage from 'pages/AnaliticPage/ui/AnaliticPage'
 
 /**
  * В данном файле лежит конфиг маршрутов приложения
@@ -31,7 +31,7 @@ export const routeConfig: Record<AppRoutes, RouteProps> = {
 
 	[AppRoutes.STATISTIC]: {
 		path: RoutePath.statistic,
-		element: <StatistiсPage />,
+		element: <AnaliticPage />,
 	},
 
 	[AppRoutes.SETTINGS]: {

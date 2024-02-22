@@ -15,7 +15,7 @@ export const TodoList = ({ className, tasks }: TodoListProps) => {
 			{tasks.length != 0
 				? tasks.map((task: TaskSchema, index) => (
 						<TodoItem {...task} key={index} />
-				))
+				  ))
 				: 'Список задач пуст, добавьте задачу!'}
 		</div>
 	)

@@ -3,9 +3,8 @@ import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoItem.module.scss'
 import { TaskDropdownActions } from './TaskActions'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { actionsTaskActions } from 'features/actions-task/model/slice/actions-task'
+import { tasksActions } from 'entities/Task/model/slice/tasks'
 
-/**TypeScript Utility Types - получаем тип непосредственно из структуры */
 interface TodoItemProps {
 	className?: string
 	id: string
@@ -18,15 +17,15 @@ export const TodoItem = (props: TodoItemProps) => {
 	const { className, id, taskSummary, countPomidor } = props
 
 	const handleIncrementPomidorTask = (id: string) => {
-		dispatch(actionsTaskActions.incrementTaskPomidor(id))
+		dispatch(tasksActions.incrementTaskPomidor(id))
 	}
 
 	const handleDecrementPomidorTask = (id: string) => {
-		dispatch(actionsTaskActions.decrementTaskPomidor(id))
+		dispatch(tasksActions.decrementTaskPomidor(id))
 	}
 
 	const handleRemoveTask = (id: string) => {
-		dispatch(actionsTaskActions.removeTask(id))
+		dispatch(tasksActions.removeTask(id))
 	}
 
 	return (

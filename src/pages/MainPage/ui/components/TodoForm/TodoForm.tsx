@@ -5,8 +5,9 @@ import { Button, ThemeButton } from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { actionsTaskActions } from 'features/actions-task/model/slice/actions-task'
 import { getAddTaskFormText } from 'features/actions-task/model/selectors/selectTaskText'
+import { tasksActions } from 'entities/Task/model/slice/tasks'
+import { actionsTaskActions } from 'features/actions-task/model/slice/actions-task'
 
 interface TodoFormProps {
 	className?: string
@@ -33,7 +34,7 @@ export const TodoForm = memo(({ className }: TodoFormProps) => {
 	)
 
 	const addTask = useCallback(() => {
-		dispatch(actionsTaskActions.addTask(taskSummary))
+		dispatch(tasksActions.addTask(taskSummary))
 	}, [dispatch, taskSummary])
 
 	return (

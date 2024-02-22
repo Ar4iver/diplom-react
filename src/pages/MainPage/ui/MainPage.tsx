@@ -7,9 +7,7 @@ import { TodoForm } from 'pages/MainPage/ui/components/TodoForm/TodoForm'
 import { TaskTimer } from './components/TaskTimer/TaskTimer'
 
 const MainPage = () => {
-	const tasks = useSelector(
-		(state: StateSchema) => state.actionsTaskSlice.tasks
-	)
+	const tasks = useSelector((state: StateSchema) => state.tasks)
 	return (
 		<section className={cls.section__app}>
 			<div className={cls.leftContent}>

@@ -3,6 +3,8 @@ import { StateSchema } from './StateSchema'
 import thunk from 'redux-thunk'
 import { useDispatch } from 'react-redux'
 import { actionsTaskReducer } from 'features/actions-task/model/slice/actions-task'
+import { timerReducer } from 'features/task-timer/slice/taskTimer'
+import { tasksReducer } from 'entities/Task/model/slice/tasks'
 
 /***
  * ReducersMapObject - позволяет структурировать и обьединять множество редьюсеров
@@ -14,6 +16,8 @@ import { actionsTaskReducer } from 'features/actions-task/model/slice/actions-ta
 export function createReduxStore(initialState?: StateSchema) {
 	const rootReducers: ReducersMapObject<StateSchema> = {
 		actionsTaskSlice: actionsTaskReducer,
+		timerTask: timerReducer,
+		tasks: tasksReducer,
 	}
 
 	return configureStore<StateSchema>({
