@@ -6,7 +6,7 @@ const initialState: TaskTimerState = {
 	breakTimeShort: 5,
 	breakTimeLong: 15,
 	secondsLeft: 0,
-	mode: 'work',
+	mode: '',
 	sessionCount: 0,
 	isRunning: false,
 	isPaused: false,

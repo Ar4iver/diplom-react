@@ -13,6 +13,7 @@ export const tasksSlice = createSlice({
 		addTask: (state, action: PayloadAction<string>) => {
 			const newTask: TaskSchema = {
 				id: uuidv4(),
+				tasksNumber: state.length + 1,
 				taskSummary: action.payload,
 				countPomidor: 1,
 				isCompleted: false,
