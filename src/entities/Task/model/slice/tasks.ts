@@ -16,6 +16,7 @@ export const tasksSlice = createSlice({
 				tasksNumber: state.length + 1,
 				taskSummary: action.payload,
 				countPomidor: 1,
+				pomidorComplete: 0,
 				isCompleted: false,
 			}
 			state.push(newTask)
@@ -29,6 +30,12 @@ export const tasksSlice = createSlice({
 				state.splice(index, 1)
 			}
 			saveTasks(state)
+		},
+		incrementPomidorCompleteTask: (state: TaskSchema[], action) => {
+			const task = state.find((task) => task.id === action.payload)
+			if (task) {
+				task.pomidorComplete += 1
+			}
 		},
 		incrementTaskPomidor: (state, action: PayloadAction<string>) => {
 			const task = state.find((task) => task.id === action.payload)

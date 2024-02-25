@@ -1,56 +1,80 @@
-import React, { ChangeEvent, useContext } from 'react'
+import React, { useCallback } from 'react'
 import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './SettingsPage.module.scss'
-import SettingsContext from 'shared/lib/settings/SettingsContext'
+import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
+import { timerActions } from 'features/task-timer/slice/taskTimer'
+import { useSelector } from 'react-redux'
+import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
+import { Input } from 'shared/ui/Input/Input'
+import { saveWorkTime } from 'shared/lib/helpers/saveWorkTime'
 
 interface SettingsPageProps {
 	className?: string
 }
 
 export const SettingsPage = ({ className }: SettingsPageProps) => {
-	const {
-		workMinutes,
-		setWorkMinutes,
-		shortBreak,
-		setShortBreak,
-		longBreak,
-		setLongBreak,
-	} = useContext(SettingsContext)
+	const dispatch = useAppDispatch()
+	const workMinutes = useSelector(
+		(state: StateSchema) => state.timerTask.workTime
+	)
 
-	const handleWorkMinutesChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setWorkMinutes!(Number(e.target.value))
-	}
+	const shortBreak = useSelector(
+		(state: StateSchema) => state.timerTask.breakTimeShort
+	)
 
-	const handleShortBreakChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setShortBreak!(Number(e.target.value))
-	}
+	const longBreak = useSelector(
+		(state: StateSchema) => state.timerTask.breakTimeLong
+	)
 
-	const handleLongBreakChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setLongBreak!(Number(e.target.value))
-	}
+	const handleWorkMinutesChange = useCallback(
+		(value: number) => {
+			dispatch(timerActions.setWorkTime(value))
+			saveWorkTime(value)
+		},
+		[dispatch]
+	)
+
+	const handleShortBreakChange = useCallback(
+		(value: number) => {
+			dispatch(timerActions.setShortBreak(value))
+			saveWorkTime(value)
+		},
+		[dispatch]
+	)
+
+	const handleLongtBreakChange = useCallback(
+		(value: number) => {
+			dispatch(timerActions.setLongBreak(value))
+			saveWorkTime(value)
+		},
+		[dispatch]
+	)
 
 	return (
 		<div className={classNames(cls.SettingsPage, {}, [className])}>
 			<div>
 				<span>Время работы</span>
-				<input
+				<Input
+					onChangeNumber={handleWorkMinutesChange}
 					value={workMinutes}
-					onChange={handleWorkMinutesChange}
-				></input>
+					type="text"
+				/>
 			</div>
 			<div>
-				<span>Время короткого перерыва</span>
-				<input
+				<span>Короткий перерыв</span>
+				<Input
+					onChangeNumber={handleShortBreakChange}
 					value={shortBreak}
-					onChange={handleShortBreakChange}
-				></input>
+					type="text"
+				/>
 			</div>
 			<div>
-				<span>Время длинного перерыва</span>
-				<input
+				<span>Длинный перерыв</span>
+				<Input
+					onChangeNumber={handleLongtBreakChange}
 					value={longBreak}
-					onChange={handleLongBreakChange}
-				></input>
+					type="text"
+				/>
 			</div>
 		</div>
 	)

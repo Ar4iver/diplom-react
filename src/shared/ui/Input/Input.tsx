@@ -26,7 +26,8 @@ interface InputProps extends HTMLInputProps {
 	type?: string
 	placeholder?: string
 	theme?: ThemeInput
-	onChange?: (value: string) => void
+	onChangeNumber?: (value: number) => void
+	onChangeString?: (value: string) => void
 }
 
 // eslint-disable-next-line react/display-name
@@ -36,13 +37,17 @@ export const Input = memo((props: InputProps) => {
 		value,
 		type = 'text',
 		placeholder,
-		onChange,
+		onChangeNumber,
+		onChangeString,
 		theme = ThemeInput.PRIMARY,
 		...otherProps
 	} = props
 
 	const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		onChange?.(e.target.value)
+		typeof value === 'string'
+			? onChangeString?.(e.target.value)
+			: onChangeNumber?.(Number(e.target.value))
+		// onChange?.(e.target.value)
 	}
 
 	return (

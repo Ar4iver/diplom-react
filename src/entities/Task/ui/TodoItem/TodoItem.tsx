@@ -4,6 +4,7 @@ import cls from './TodoItem.module.scss'
 import { TaskDropdownActions } from './TaskActions'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
 import { tasksActions } from 'entities/Task/model/slice/tasks'
+import { timerActions } from 'features/task-timer/slice/taskTimer'
 
 interface TodoItemProps {
 	className?: string
@@ -26,6 +27,7 @@ export const TodoItem = (props: TodoItemProps) => {
 
 	const handleRemoveTask = (id: string) => {
 		dispatch(tasksActions.removeTask(id))
+		dispatch(timerActions.stopTimer())
 	}
 
 	return (

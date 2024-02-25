@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TaskTimerState } from '../types/timer'
+import { loadWorkTime } from 'shared/lib/helpers/loadWorkTime'
 
 const initialState: TaskTimerState = {
-	workTime: 25,
+	workTime: loadWorkTime(),
 	breakTimeShort: 5,
 	breakTimeLong: 15,
 	secondsLeft: 0,
@@ -16,6 +17,15 @@ export const taskTimerSlice = createSlice({
 	name: 'timerTask',
 	initialState,
 	reducers: {
+		setWorkTime: (state, action: PayloadAction<number>) => {
+			state.workTime = action.payload
+		},
+		setShortBreak: (state, action: PayloadAction<number>) => {
+			state.breakTimeShort = action.payload
+		},
+		setLongBreak: (state, action: PayloadAction<number>) => {
+			state.breakTimeLong = action.payload
+		},
 		setMode: (state, action: PayloadAction<string>) => {
 			state.mode = action.payload
 		},

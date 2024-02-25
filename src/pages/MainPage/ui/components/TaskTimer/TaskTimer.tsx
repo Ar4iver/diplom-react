@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux'
 import { StateSchema } from 'app/providers/StoreProvider/config/StateSchema'
 import { timerActions } from 'features/task-timer/slice/taskTimer'
 import { tasksActions } from 'entities/Task/model/slice/tasks'
+import { selectTaskCountPomidor } from 'entities/Task/model/selectors/selectTaskCountPomidor '
+import { selectTaskPomidorComplete } from 'entities/Task/model/selectors/selectTaskPomidorComplete'
 
 interface TaskTimerProps {
 	className?: string
@@ -29,21 +31,21 @@ export const TaskTimer = (props: TaskTimerProps) => {
 		breakTimeLong,
 	} = useSelector((state: StateSchema) => state.timerTask)
 
+	const countPomidor = useSelector((state: StateSchema) =>
+		selectTaskCountPomidor(state.tasks, activeTask?.id)
+	)
+
+	const pomidorCompleteTask = useSelector((state: StateSchema) =>
+		selectTaskPomidorComplete(state.tasks, activeTask?.id)
+	)
+
 	const handleStart = () => {
 		if (tasks.length === 0) {
 			return
 		}
-		if (mode === 'idle' || secondsLeft === 0) {
-			const initialTime =
-				mode === 'work'
-					? workTime * 60
-					: mode === 'shortBreak'
-					? breakTimeShort * 60
-					: breakTimeLong * 60
-			dispatch(timerActions.setSecondsLeft(initialTime))
-		}
 		dispatch(timerActions.startTimer())
 	}
+
 	const handlePause = () => {
 		dispatch(timerActions.pauseTimer())
 	}
@@ -72,11 +74,13 @@ export const TaskTimer = (props: TaskTimerProps) => {
 	useEffect(() => {
 		let interval: null | ReturnType<typeof setTimeout> = null
 		if (activeTask && isRunning && !isPaused) {
-			if (activeTask.countPomidor >= 1) {
-				console.log('запуск таймера')
+			if (countPomidor && countPomidor >= 1) {
 				interval = setInterval(() => {
 					dispatch(timerActions.tick())
 				}, 5)
+			} else {
+				dispatch(tasksActions.completeTask(activeTask.id))
+				dispatch(timerActions.stopTimer())
 			}
 		}
 
@@ -85,41 +89,45 @@ export const TaskTimer = (props: TaskTimerProps) => {
 				clearInterval(interval)
 			}
 		}
-	}, [isRunning, isPaused, dispatch, mode, activeTask])
+	}, [isRunning, isPaused, dispatch, mode, activeTask, countPomidor])
 
 	useEffect(() => {
 		if (secondsLeft === 0) {
-			if (mode === 'work' && activeTask?.countPomidor >= 1 && isRunning) {
-				dispatch(tasksActions.decrementTaskPomidor(activeTask.id))
-			} else if (
-				mode === 'work' &&
-				activeTask?.countPomidor <= 1 &&
-				isRunning
-			) {
-				if (tasks.length > 1) {
-					dispatch(tasksActions.completeTask(activeTask.id))
-					const activeTaskIndex = tasks.findIndex(
-						(task) => task.id === activeTask.id
-					)
-					const nextTask = tasks[activeTaskIndex + 1] || null
-					setActiveTask(nextTask)
-				} else {
-					dispatch(timerActions.stopTimer())
-					dispatch(tasksActions.completeTask(activeTask.id))
-					dispatch(timerActions.resetSessionCount())
-				}
+			if (mode === 'work' && countPomidor != null && countPomidor > 0) {
+				dispatch(tasksActions.decrementTaskPomidor(activeTask?.id))
+				dispatch(
+					tasksActions.incrementPomidorCompleteTask(activeTask?.id)
+				)
 			}
 			dispatch(timerActions.switchMode())
 		}
 	}, [
-		activeTask?.countPomidor,
 		activeTask?.id,
+		countPomidor,
 		dispatch,
-		isRunning,
 		mode,
 		secondsLeft,
-		tasks,
+		tasks.length,
 	])
+
+	useEffect(() => {
+		let initialTime = 0
+		switch (mode) {
+			case 'work':
+				initialTime = workTime * 60
+				break
+			case 'shortBreak':
+				initialTime = breakTimeShort * 60
+				break
+			case 'longBreak':
+				initialTime = breakTimeLong * 60
+				break
+			default:
+				initialTime = workTime * 60
+				break
+		}
+		dispatch(timerActions.setSecondsLeft(initialTime))
+	}, [workTime, breakTimeShort, breakTimeLong, mode, dispatch])
 
 	useEffect(() => {
 		setActiveTask(tasks[0] || null)
@@ -139,7 +147,7 @@ export const TaskTimer = (props: TaskTimerProps) => {
 				{tasks.length ? (
 					<>
 						<div>{activeTask?.taskSummary}</div>
-						<div>Помидоров прошло</div>
+						<div>Помидоров прошло - {pomidorCompleteTask}</div>
 					</>
 				) : (
 					''
@@ -170,7 +178,9 @@ export const TaskTimer = (props: TaskTimerProps) => {
 				</span>
 			</div>
 			<div className={cls.taskTimer}>
-				{`Задача ${activeTask?.tasksNumber} - ${activeTask?.taskSummary}`}
+				{activeTask
+					? `Задача ${activeTask?.tasksNumber} - ${activeTask?.taskSummary}`
+					: ''}
 			</div>
 			<div className={cls.btnTimerAction}>
 				{isRunning ? (

@@ -45,7 +45,7 @@ export const TodoForm = memo(({ className }: TodoFormProps) => {
 			className={classNames(cls.TodoForm, {}, [className])}
 		>
 			<Input
-				onChange={onChangeTask}
+				onChangeString={onChangeTask}
 				value={taskSummary}
 				type="text"
 				placeholder="Название задачи"

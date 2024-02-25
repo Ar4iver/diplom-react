@@ -3,5 +3,6 @@ export type TaskSchema = {
 	taskSummary: string
 	tasksNumber: number
 	countPomidor: number
+	pomidorComplete: number
 	isCompleted: boolean | null
 }

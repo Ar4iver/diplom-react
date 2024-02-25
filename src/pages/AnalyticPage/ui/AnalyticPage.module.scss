@@ -1,0 +1,24 @@
+.AnaliticPage {
+    display: flex;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 1.25rem;
+}
+
+.wrapperChart {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.analiticChart {
+    display: flex;
+    flex-basis: 1.25rem;
+    gap: 1.5rem;
+}
+
+.mainChart {
+    width: 100%;
+}
