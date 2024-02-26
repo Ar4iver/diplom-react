@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
-import { TaskSchema } from 'entities/Task/types/task'
+import { TaskSchema } from 'entities/Task'
 import { loadTasks } from 'shared/lib/helpers/loadTasks'
 import { saveTasks } from 'shared/lib/helpers/saveTasks'
 

@@ -1,4 +1,4 @@
-import { TaskSchema } from 'entities/Task/types/task'
+import { TaskSchema } from 'entities/Task'
 
 export const selectTaskCountPomidor = (state: TaskSchema[], taskId: string) => {
 	const task = state.find((task) => task.id === taskId)

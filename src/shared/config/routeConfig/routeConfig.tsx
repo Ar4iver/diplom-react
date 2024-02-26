@@ -1,9 +1,9 @@
 import React from 'react'
+import { RouteProps } from 'react-router-dom'
 import { NotFoundPage } from 'pages/404Page'
 import { MainPage } from 'pages/MainPage'
-import { RouteProps } from 'react-router-dom'
 import { SettingsPage } from 'pages/SettingsPage'
-import AnalyticPage from 'pages/AnalyticPage/ui/AnalyticPage'
+import { AnalyticPage } from 'pages/AnalyticPage'
 
 /**
  * В данном файле лежит конфиг маршрутов приложения

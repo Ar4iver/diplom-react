@@ -5,5 +5,9 @@ export enum Activity {
 }
 
 export interface ChartState {
+	data: null
 	activity: string
+	focusCount: number
+	pauseTimeCount: number
+	stopCount: number
 }

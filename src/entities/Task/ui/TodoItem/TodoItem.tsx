@@ -3,8 +3,8 @@ import { classNames } from 'shared/lib/classNames/classNames'
 import cls from './TodoItem.module.scss'
 import { TaskDropdownActions } from './TaskActions'
 import { useAppDispatch } from 'app/providers/StoreProvider/config/store'
-import { tasksActions } from 'entities/Task/model/slice/tasks'
 import { timerActions } from 'features/task-timer/slice/taskTimer'
+import { tasksActions } from 'entities/Task'
 
 interface TodoItemProps {
 	className?: string
