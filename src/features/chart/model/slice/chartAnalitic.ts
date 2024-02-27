@@ -6,7 +6,7 @@ const initialState: ChartState = {
 	activity: 'Эта неделя',
 	focusCount: 0,
 	pauseTimeCount: 0,
-	stopCount: 0
+	stopCount: 0,
 }
 
 export const chartSlice = createSlice({

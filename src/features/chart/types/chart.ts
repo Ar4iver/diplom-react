@@ -4,8 +4,17 @@ export enum Activity {
 	'2 недели назад' = '2 недели назад',
 }
 
+export interface DailyStats {
+	id: string
+	date: string
+	completedTomatoCount: number
+	pauseTime: number
+	stopCount: number
+	totalTimeTask: number
+}
+
 export interface ChartState {
-	data: null
+	data: DailyStats | null
 	activity: string
 	focusCount: number
 	pauseTimeCount: number
